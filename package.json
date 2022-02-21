@@ -1,0 +1,26 @@
+{
+  "name": "api-vv-quote",
+  "version": "0.1.0",
+  "description": "Back-end projet Dr Valentin",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Franckyroquai/backend-VV-quotes.git"
+  },
+  "keywords": [
+    "api",
+    "rest",
+    "crud",
+    "auth",
+    "quote"
+  ],
+  "author": "Franck Monge",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Franckyroquai/backend-VV-quotes/issues"
+  },
+  "homepage": "https://github.com/Franckyroquai/backend-VV-quotes#readme"
+}
