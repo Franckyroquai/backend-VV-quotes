@@ -1,0 +1,1 @@
+//ici il faut creer le model (mongoose) des quotes
