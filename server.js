@@ -1,40 +1,74 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const bodyParser = require('body-parser');
 
-const UserModel = require('./models/model');
+const UserModel = require('./models/user');
 
-const port = 3000;
+const port = process.env.SERVERPORT;
 
-// mongoose.connect('mongodb://127.0.0.1:27017/passport-jwt', { useMongoClient: true });
-const username = "Jarvis";
-const password = "2A2USguNypnOeBVZ";
-const cluster = "cluster0.7pf4a";
-const dbname = "myFirstDatabase";
+const dbusername = process.env.DBUSER;
+const dbpassword = process.env.DBPASS;
+const dbcluster = process.env.DBCLUSTER;
+const dbname = process.env.DBNAME;
+
 mongoose.connect(
-    `mongodb+srv://${username}:${password}@${cluster}.mongodb.net/${dbname}?retryWrites=true&w=majority`, 
+    `mongodb+srv://${dbusername}:${dbpassword}@${dbcluster}.mongodb.net/${dbname}?retryWrites=true&w=majority`, 
     {}
   );
 mongoose.connection.on('error', error => console.log(error) );
-// mongoose.Promise = global.Promise;
-
-// fin des configs et de la connection a la DB
+mongoose.Promise = global.Promise;
 
 
-require('./auth/auth');
 
-const routes = require('./routes/routes');
-const secureRoute = require('./routes/secure-routes');
+
+
+
+
+
+
+
+
+
+
+
+
+
+require('./authentification');
+
+const publicAuthRoutes = require('./routes/user/public-routes');
+const privateAuthRoutes = require('./routes/user/private-routes');
+const publicQuoteRoutes = require('./routes/quote/public-routes');
 
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
 
-app.use('/', routes); // '/' >>> root ou racine
+app.use('/', publicAuthRoutes); // '/' >>> root ou racine
+app.use('/quote', publicQuoteRoutes);
 
 // Plug in the JWT strategy as a middleware so only verified users can access this route.
-app.use('/user', passport.authenticate('jwt', { session: false }), secureRoute);
+app.use('/user', passport.authenticate('jwt', { session: false }), privateAuthRoutes);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Handle errors.
 app.use(function(err, req, res, next) {
