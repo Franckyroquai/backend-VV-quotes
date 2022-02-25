@@ -5,22 +5,23 @@ const router = express.Router();
 
 //obtenir une citation random part une méthode js
 router.get(
-    '/random-js', 
+    '/random-js', //Récupérer le tableau entier
     async (req, res, next) => {
         console.log("ici get random quotes");
 
-
-
         const quoteRandom = quoteModel.find(
             {},
-            ['text', 'author'],
+            [],
+            // ['text', 'author'],
             async (err, result) => {
             if (err) {
                 console.log('erreur:', err.message);
                 await res.statut(500).send('error');
             }
-            // console.log(result);
+
+            console.log(result);
             // console.log("taille du tableau", result.length);
+            //Taille du tableau des quotes
             const quoteArrayLength = result.length;
             
             // console.log("array", result);
@@ -31,12 +32,30 @@ router.get(
             // console.log("\n\n");
             //console.log("last element of array", result[quoteArrayLength - 1]);
 
+            //Obtenir un idindex aléatoire
             const randomArrayIndex = Math.floor(Math.random() * quoteArrayLength);
-            console.log(randomArrayIndex);
-            console.log(result[randomArrayIndex]);
+            //console.log(randomArrayIndex);
+            //console.log(result[randomArrayIndex]);
             
 
-        res.json(result[randomArrayIndex]);
+
+            const randomQuoteWithId = result[randomArrayIndex]; 
+           // console.log(randomQuoteWithId);
+
+            console.log("text:\n",randomQuoteWithId.text);
+            console.log("author:\n", randomQuoteWithId.author);
+
+            //Obtenir uniquement les champs citation et autheur
+            
+            const randomQuote = {
+                text: randomQuoteWithId.text,
+                author: randomQuoteWithId.author
+            }
+
+
+
+        
+        res.json(randomQuote);
     });
 
     
