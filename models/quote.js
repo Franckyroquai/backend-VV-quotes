@@ -2,7 +2,7 @@
 //
 // debut des imports
 const mongoose = require('mongoose');
-
+const mRandom = require('mongoose-simple-random');
 //endof imports
 //
 //
@@ -25,11 +25,18 @@ const QuoteSchema = new Schema({
     }
 }, 
 { timestamps: true });
+QuoteSchema.plugin(mRandom);
 // endof config and declarations
 //
 //
 // debut de la "logique"
 // penser à mettre une méthode de récupération random de la quote
+QuoteSchema.static.quoteCleanUp = function (quote) {
+    return {
+        text: quote.text,
+        author: quote.author
+    }
+}
 // endof  "logique"
 //
 //
