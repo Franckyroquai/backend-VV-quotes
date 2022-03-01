@@ -1,5 +1,6 @@
 const express = require("express");
 const quoteModel = require("../../models/quote");
+const casual = require("casual");
 
 const router = express.Router();
 
@@ -78,6 +79,59 @@ router.post("/create-one", async (req, res, next) => {
     console.log(err.message);
     res.status(409).send(err.message);
   }
+});
+
+router.post("/generate", async (req, res, next) => {
+  const numberOfQuotesParametric = req.body.numberOfQuotes || 5;
+  console.log(req.body);
+  console.log(
+    "number of quotes asked from the front :",
+    numberOfQuotesParametric
+  );
+  const numberOfQuotes = 5;
+  var arrayBob = [];
+  // var quote = {
+  //   author: casual.name,
+  //   // text: casual.sentence,
+  //   text: " ",
+  // };
+  // console.log("\nvaleur de la quote avant la boucle:\n", quote, "\n");
+  for (let i = 0; i < numberOfQuotesParametric; i++) {
+    // console.log("i: ", i);
+    arrayBob.push({ author: casual.name, text: casual.sentence });
+    // console.log(arrayBob);
+  }
+  quoteModel.insertMany(arrayBob, (err, docs) => {
+    if (err) {
+      return console.error(err);
+    } else {
+      console.log("Multiple documents inserted to Collection");
+      res.json({ ok: true, number: numberOfQuotesParametric });
+    }
+  });
+  // console.log(arrayBob);
+  // console.log("\nvaleur de la quote apres la boucle:\n", quote);
+  // let i = 0;
+  // console.log("valeur de i", i);
+  // i++;
+  // console.log("valeur de i", i);
+  // i++;
+  // console.log("valeur de i", i);
+  // i++;
+  // console.log("valeur de i", i);
+  // i++;
+  // console.log("valeur de i", i);
+
+  // console.log(quote);
+
+  // console.log("generated quote", quote);
+  // res.json({});
+});
+
+router.delete("/delete", async (req, res, next) => {
+  quoteModel.deleteMany({}, (result) => {
+    res.send(result);
+  });
 });
 
 module.exports = router;
