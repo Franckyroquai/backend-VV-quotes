@@ -21,7 +21,7 @@ mongoose.connect(
   `mongodb+srv://${dbusername}:${dbpassword}@${dbcluster}.mongodb.net/${dbname}?retryWrites=true&w=majority`,
   {}
 );
-mongoose.connection.on("error", (error) => console.log(error));
+mongoose.connection.on("error", (error) => console.error(error));
 mongoose.Promise = global.Promise;
 
 require("./authentification");
@@ -47,13 +47,12 @@ app.use(
 
 // Handle errors.
 app.use((err, req, res, next) => {
-  console.log("erreur", err);
+  console.error("erreur", err);
   res.status(err.status || 500);
   res.json({ error: err }); // mouais pas trop secure
   //   res.json({ error: "il y a eu une erreur dans le serveur" }); // mieux
 });
 
 app.listen(port, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Server started on port ${port}.`);
+  console.info(`Server started on port ${port}.`);
 });
