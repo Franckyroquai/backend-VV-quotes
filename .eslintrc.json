@@ -1,22 +1,23 @@
 {
-    "env": {
-        "node": true,
-        "commonjs": true,
-        "es2021": true
-    },
-    "extends": [
-        "eslint:recommended",
-        "plugin:prettier/recommended"
-    ],
-    "parserOptions": {
-        "ecmaVersion": "latest"
-    },
-    "rules": {
-        "no-unused-vars":"off",//TODO: remove before prod
-        "no-console":"warn",
-        "prettier/prettier":[
-            "warn",
-            {"singleQuote": false}
-        ]
-    }
+  "env": {
+    "node": true,
+    "commonjs": true,
+    "es2021": true
+  },
+  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "rules": {
+    "no-unused-vars": "off", //TODO: remove before prod
+    "no-console": "warn",
+    "comma-dangle": ["error", "always-multiline"],
+    "prettier/prettier": [
+      "warn",
+      {
+        "singleQuote": false,
+        "trailingComma": "all"
+      }
+    ]
+  }
 }
