@@ -11,12 +11,15 @@
   "rules": {
     "no-unused-vars": "off", //TODO: remove before prod
     "no-console": "warn",
-    "comma-dangle": ["error", "always-multiline"],
+    "comma-dangle": ["error", {
+        "arrays": "always-multiline",
+        "objects": "only-multiline"
+        }],
     "prettier/prettier": [
       "warn",
       {
         "singleQuote": false,
-        "trailingComma": "all"
+        "trailingComma": "es5"
       }
     ]
   }
