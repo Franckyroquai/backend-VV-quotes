@@ -4,7 +4,9 @@
   "description": "Back-end projet Dr Valentin",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "./node_modules/nodemon/bin/nodemon.js server.js",
+    "prod": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -24,8 +26,13 @@
   },
   "homepage": "https://github.com/Franckyroquai/backend-VV-quotes#readme",
   "devDependencies": {
-    "eslint": "^8.9.0",
-    "nodemon": "^2.0.15"
+    "eslint": "^8.10.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.4.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-prettier": "^4.0.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.1"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
