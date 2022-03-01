@@ -10,16 +10,21 @@
   },
   "rules": {
     "no-unused-vars": "off", //TODO: remove before prod
-    "no-console": ["warn", {"allow": ["warn", "error", "info"]}],
-    "comma-dangle": ["error", {
+    "no-console": ["warn", { "allow": ["warn", "error", "info"] }],
+    "linebreak-style": "off",
+    "comma-dangle": [
+      "error",
+      {
         "arrays": "always-multiline",
         "objects": "only-multiline"
-        }],
+      }
+    ],
     "prettier/prettier": [
       "warn",
       {
         "singleQuote": false,
-        "trailingComma": "es5"
+        "trailingComma": "es5",
+        "endOfLine": "auto"
       }
     ]
   }
