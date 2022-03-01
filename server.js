@@ -54,5 +54,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(port, () => {
+  // eslint-disable-next-line no-console
   console.log(`Server started on port ${port}.`);
 });
