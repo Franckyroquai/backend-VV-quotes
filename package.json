@@ -28,6 +28,7 @@
   "homepage": "https://github.com/Franckyroquai/backend-VV-quotes#readme",
   "devDependencies": {
     "casual": "^1.6.2",
+    "cors": "^2.8.5",
     "eslint": "^8.10.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.4.0",
