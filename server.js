@@ -7,6 +7,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const passport = require("passport");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 const UserModel = require("./models/user");
 
@@ -31,6 +32,8 @@ const privateAuthRoutes = require("./routes/user/private-routes");
 const publicQuoteRoutes = require("./routes/quote/public-routes");
 
 const app = express();
+
+app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
