@@ -2,11 +2,11 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const logger = require("../../helpers/logger");
 const UserModel = require("../../models/user");
-const { cryptPassword, validatePassword } = require("../../helpers/passwords");
+const { cryptPassword } = require("../../helpers/passwords");
 
 const router = express.Router();
 
-router.post("/register", async (req, res, next) => {
+router.post("/register", async (req, res) => {
   if (!req.body.email || !req.body.password) {
     logger.info("for registration email and password are required", {
       request: req,
@@ -28,7 +28,7 @@ router.post("/register", async (req, res, next) => {
   res.json({ registered: user.email });
 });
 
-router.post("/login", async (req, res, next) => {
+router.post("/login", async (req, res) => {
   // logger.info({ body: req.body, headers: req.headers });
   if (!req.body.email || !req.body.password) {
     let body = req.body;
@@ -56,14 +56,14 @@ router.post("/login", async (req, res, next) => {
   res.json({ access_token: token });
 });
 
-router.delete("/user-flush", async (req, res, next) => {
+router.delete("/user-flush", async (req, res) => {
   //FIXME: debug function to remove before prod
   const result = await UserModel.deleteMany({});
   logger.info(result);
   res.json({ ok: true });
 });
 
-router.get("/count-users", async (req, res, next) => {
+router.get("/count-users", async (req, res) => {
   //FIXME: debug function to remove before prod
   const count = await UserModel.estimatedDocumentCount({});
   logger.info("user count:", count);

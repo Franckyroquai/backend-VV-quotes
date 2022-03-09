@@ -7,7 +7,7 @@ const logger = require("../../helpers/logger");
 const { randomIntFromInterval } = require("../../helpers/math");
 const quoteModel = require("../../models/quote");
 
-router.post("/create-one", async (req, res, next) => {
+router.post("/create-one", async (req, res) => {
   const body = req.body;
   const text = body.text;
   logger.log(text);
@@ -42,14 +42,14 @@ if (process.env.NODE_ENV === "dev") {
   });
 }
 
-router.delete("/flush", async (req, res, next) => {
+router.delete("/flush", async (req, res) => {
   const deletedQuotes = await quoteModel.deleteMany({});
   logger.debug({ deletedQuotes });
   logger.warn("Quotes Collection FLUSHED");
   res.json({ flushed: true });
 });
 
-router.delete("/delete", async (req, res, next) => {
+router.delete("/delete", async (req, res) => {
   const { author, text } = req.body;
   let filter = {};
   if (author && !text) {
