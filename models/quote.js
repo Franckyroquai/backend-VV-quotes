@@ -34,10 +34,14 @@ QuoteSchema.plugin(mRandom);
 // debut de la "logique"
 // penser à mettre une méthode de récupération random de la quote
 QuoteSchema.static.quoteCleanUp = function (quote) {
-  return {
-    text: quote.text,
-    author: quote.author,
-  };
+  if (quote.text && quote.author) {
+    return {
+      text: quote.text,
+      author: quote.author,
+    };
+  } else {
+    throw new Error("quote format error");
+  }
 };
 // endof  "logique"
 //
