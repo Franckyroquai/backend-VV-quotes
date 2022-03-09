@@ -57,12 +57,14 @@ router.post("/login", async (req, res, next) => {
 });
 
 router.delete("/user-flush", async (req, res, next) => {
+  //FIXME: debug function to remove before prod
   const result = await UserModel.deleteMany({});
   logger.info(result);
   res.json({ ok: true });
 });
 
 router.get("/count-users", async (req, res, next) => {
+  //FIXME: debug function to remove before prod
   const count = await UserModel.estimatedDocumentCount({});
   logger.info("user count:", count);
   res.json({ count });
