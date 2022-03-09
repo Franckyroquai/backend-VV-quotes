@@ -1,6 +1,7 @@
 const express = require("express");
 const logger = require("../../helpers/logger");
 const quoteModel = require("../../models/quote");
+const { randomIntFromInterval } = require("../../helpers/math");
 
 const router = express.Router();
 
@@ -11,7 +12,8 @@ router.get("/random-js", async (req, res, next) => {
       logger.log("erreur:", err.message);
       await res.statut(500).send("error");
     }
-    const randomQuoteWithId = result[Math.floor(Math.random() * result.length)];
+    const randomQuoteWithId =
+      result[randomIntFromInterval(0, result.length - 1)];
     const randomQuote = {
       text: randomQuoteWithId.text,
       author: randomQuoteWithId.author,
@@ -25,7 +27,7 @@ router.get("/random-mongoose", async (req, res, next) => {
   const total = await quoteModel.estimatedDocumentCount();
   const randomQuoteWithId = await quoteModel
     .findOne({})
-    .skip(Math.floor(Math.random() * total))
+    .skip(randomIntFromInterval(0, total - 1))
     .exec();
 
   const randomQuote = {
