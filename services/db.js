@@ -12,13 +12,14 @@ mongoose.connect(
   {}
 );
 mongoose.connection.on("error", (error) => {
-  logger.error("mongoose connectio error", error);
+  logger.error("mongoose connection error", error);
   process.exit;
 });
 mongoose.connection.on("connected", () => {
   logger.info("MongoDb via Mongoose is connected");
 });
 mongoose.connection.on("disconnected", (something) => {
-  logger.info("mongoose disconected", something);
+  logger.info("mongoose disconnected", something);
 });
+
 mongoose.Promise = global.Promise;
