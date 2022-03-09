@@ -1,11 +1,8 @@
 const bcrypt = require("bcrypt");
 const logger = require("./logger");
 const saltRounds = parseInt(process.env.SALT_ROUNDS);
-const salt = process.env.PASSWORD_SALT;
 
-logger.debug(saltRounds, typeof saltRounds);
-
-if (!salt || !saltRounds) {
+if (!saltRounds) {
   logger.error("no salt please use pepper instead");
   process.exit;
 }
