@@ -13,52 +13,55 @@ router.post("/register", async (req, res) => {
     });
     res
       .status(400)
-      .json({ message: "for registration email and password are required" });
+      .json({ message: "For registration email and password are required" });
   }
-  let user = await UserModel.findOne({ email: req.body.email });
+
+  let user = await UserModel.findOne({ email: req.body.email }); //check dans la BD si un utilisateur a déjà cet email
   if (user) {
-    logger.warn("user already registered\n", { request: req.body });
-    res.status(409).json({ message: "user already registered" });
+    logger.warn("user already registered\n", { request: req.body }); //log crée un historique d'erreurs dans la console
+    res.status(409).json({ message: "user already registered" }); //envoi message d'erreur au client
   }
   user = await UserModel.create({
+    //pas d'erreurs, traitement standard
     email: req.body.email,
     password: await cryptPassword(req.body.password),
   });
   logger.debug(user);
-  res.json({ registered: user.email });
+  res.json({ registered: user.email }); //confirme l'enregistrement en affichant l'email
 });
 
 router.post("/login", async (req, res) => {
   // logger.info({ body: req.body, headers: req.headers });
   if (!req.body.email || !req.body.password) {
-    let body = req.body;
-    logger.debug(body);
-    return res
-      .status(400)
-      .json({ message: "Error. Email and Password are Required" });
+    logger.info("Error. Email and Password are Required", {
+      request: req,
+    });
+    res.status(400).json({ message: "Error. Email and Password are Required" });
   }
-  logger.debug(req.body.email);
-  const user = await UserModel.findOne({
-    email: req.body.email /*TODO:password with bcrypt*/,
+  //logger.debug(req.body.email);
+  let user = await UserModel.findOne({
+    //essaye de trouver dans la BD l'utilisateur
+    email: req.body.email, // dont l'email correspond a l'email de la requete
+    //TODO: gerer le password
   });
   logger.debug(user);
   if (!user) {
     logger.error("login attempt failed", { requestBody: req.body });
-    res.status(400).json({ message: "Error. Wrong login or password" });
+    res.status(400).json({ message: "Error. Wrong email or password" });
   }
   const token = jwt.sign(
     {
-      email: user.email,
+      email: user.email, //payload du jwt
     },
     process.env.JWT_SECRET,
-    { expiresIn: "15 days" }
+    { expiresIn: "5 hours" } //pas besoin de se loger pendant 5 h (duree de validite du token)
   );
-  res.json({ access_token: token });
+  res.json({ access_token: token }); //renvoi le token au front
 });
 
 router.delete("/user-flush", async (req, res) => {
   //FIXME: debug function to remove before prod
-  const result = await UserModel.deleteMany({});
+  const result = await UserModel.deleteMany({}); //selectionne toute la selection des users en BD
   logger.info(result);
   res.json({ ok: true });
 });
