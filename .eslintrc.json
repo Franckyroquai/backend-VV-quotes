@@ -9,8 +9,8 @@
     "ecmaVersion": "latest"
   },
   "rules": {
-    "no-unused-vars": "off", //TODO: remove before prod
-    "no-console": ["warn", { "allow": ["warn", "error", "info"] }],
+    "no-unused-vars": "warn", //TODO: remove before prod
+    "no-console": "error",
     "linebreak-style": "off",
     "comma-dangle": [
       "error",
