@@ -70,8 +70,8 @@ router.delete("/delete", async (req, res) => {
 router.delete("/id", async (req, res) => {
   const { id } = req.body; //TODO: ici par query segment ce serait bien
   logger.debug("id:", id);
-  const response = await quoteModel.findOneAndDelete({ _id: id });
-  res.json(response);
+  const deletedObject = await quoteModel.findOneAndDelete({ _id: id });
+  res.json(deletedObject);
 });
 
 module.exports = router;
