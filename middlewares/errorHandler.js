@@ -1,9 +1,19 @@
 // const express = require("express");
 const logger = require("../helpers/logger");
 
-module.exports = (err, req, res, next) => {
+module.exports = (err, req, res) => {
   if (err) {
-    logger.error(err);
-    res.status(500).send("internal error");
+    // logger.error(err);
+    logger.info("error status", err);
+    logger.warn("error truc", err.code);
+    let status = 500;
+    let msg = "internal error";
+    if (err.status) {
+      status = err.status;
+    }
+    if (err.code) {
+      msg = err.code;
+    }
+    res.status(status).send(msg);
   }
 };

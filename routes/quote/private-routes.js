@@ -17,8 +17,9 @@ router.post("/create-one", async (req, res) => {
     const quote = await quoteModel.create({ text: text, author: author });
     res.json({ quote });
   } catch (err) {
-    logger.log(err.message);
+    logger.log(err);
     res.status(409).send(err.message);
+    // next(new Error());
   }
 });
 
@@ -64,6 +65,13 @@ router.delete("/delete", async (req, res) => {
 
   const deletedQuote = await quoteModel.deleteMany(filter);
   res.json({ deletedQuote });
+});
+
+router.delete("/id", async (req, res) => {
+  const { id } = req.body; //TODO: ici par query segment ce serait bien
+  logger.debug("id:", id);
+  const response = await quoteModel.findOneAndDelete({ _id: id });
+  res.json(response);
 });
 
 module.exports = router;

@@ -58,13 +58,13 @@ router.get("/random-mongoose-lib", async (req, res, next) => {
 
 //Obtenir la liste de toutes les citations
 router.get("/all", async (req, res, next) => {
-  await quoteModel.find({}, ["text", "author"], async (err, result) => {
-    if (err) {
-      logger.log("erreur:", err.message);
-      await res.status(500).send("error");
-    }
-    res.json({ result });
-  });
+  const quotes = await quoteModel.find({}, ["text", "author"]);
+  res.json({ quotes });
+});
+
+router.get("/count", async (req, res) => {
+  const count = await quoteModel.estimatedDocumentCount();
+  res.json({ count });
 });
 
 module.exports = router;
