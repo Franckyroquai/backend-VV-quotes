@@ -17,7 +17,13 @@ router.post("/register", async (req, res) => {
   }
 
   let userIsOk = false;
-  const preValidatedEmails = process.env.USER_MAILS.split(",");
+  let preValidatedEmails;
+  if (process.env.USER_MAILS) {
+    preValidatedEmails = process.env.USER_MAILS.split(",");
+  } else {
+    logger.error("no prevalidated emails in env");
+    res.status(403).json({ reason: "invalid Email" });
+  }
   for (let i = 0; i < preValidatedEmails.length; i++) {
     if (preValidatedEmails[i] === req.body.email) {
       userIsOk = true;
