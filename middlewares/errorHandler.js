@@ -1,7 +1,7 @@
 // const express = require("express");
 const logger = require("../helpers/logger");
 
-module.exports = (err, req, res) => {
+module.exports = (err, req, res, next) => {
   if (err) {
     // logger.error(err);
     logger.info("error status", err);

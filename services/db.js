@@ -1,4 +1,3 @@
-//TODO: export her th logic for db connection and configuration
 const mongoose = require("mongoose");
 const logger = require("../helpers/logger");
 

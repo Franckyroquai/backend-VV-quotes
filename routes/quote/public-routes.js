@@ -6,7 +6,7 @@ const { randomIntFromInterval } = require("../../helpers/math");
 const router = express.Router();
 
 //obtenir une citation random part une méthode js
-router.get("/random-js", async (req, res, next) => {
+router.get("/random-js", async (req, res) => {
   await quoteModel.find({}, [], async (err, result) => {
     if (err) {
       logger.log("erreur:", err.message);
@@ -23,7 +23,7 @@ router.get("/random-js", async (req, res, next) => {
 });
 
 //obtenir une citation par une méthode mongoose
-router.get("/random-mongoose", async (req, res, next) => {
+router.get("/random-mongoose", async (req, res) => {
   const total = await quoteModel.estimatedDocumentCount();
   const randomQuoteWithId = await quoteModel
     .findOne({})
@@ -42,7 +42,7 @@ router.get("/random-mongoose", async (req, res, next) => {
 });
 
 //obtenir une citation par une librairie mongooose
-router.get("/random-mongoose-lib", async (req, res, next) => {
+router.get("/random-mongoose-lib", async (req, res) => {
   await quoteModel.findOneRandom((err, randomQuoteWithId) => {
     logger.log(
       "cleaned up quote:\n",
@@ -57,7 +57,7 @@ router.get("/random-mongoose-lib", async (req, res, next) => {
 });
 
 //Obtenir la liste de toutes les citations
-router.get("/all", async (req, res, next) => {
+router.get("/all", async (req, res) => {
   const quotes = await quoteModel.find({}, ["text", "author"]);
   res.json({ quotes });
 });
