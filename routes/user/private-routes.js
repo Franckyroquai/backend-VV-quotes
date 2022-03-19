@@ -4,10 +4,9 @@ const UserModel = require("../../models/user");
 const router = express.Router();
 
 router.get("/profile", async (req, res) => {
-  // logger.debug({ headers: req.headers, body: req.body });
   logger.debug({ user: req.user, query: req.query });
   const user = await UserModel.findOne({ email: req.user.email });
-  console.log("user: ", user._id.toString());
+  logger.debug("user: ", user._id.toString());
   res.json({
     message: "You made it to the secure route",
     user: req.user,

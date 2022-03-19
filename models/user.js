@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const saltRounds = parseInt(process.env.SALT_ROUNDS);
 
 const Schema = mongoose.Schema;
 
@@ -17,13 +18,13 @@ const UserSchema = new Schema({
 
 UserSchema.pre("save", async function (next) {
   const user = this;
-  const hash = await bcrypt.hash(this.password, 10);
+  const hash = await bcrypt.hash(user.password, saltRounds);
 
   this.password = hash;
   next();
 });
 
-UserSchema.methods.isValidPassword = async function (password) {
+UserSchema.methods.isPasswordValid = async function (password) {
   const user = this;
   const compare = await bcrypt.compare(password, user.password);
 

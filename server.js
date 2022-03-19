@@ -1,4 +1,4 @@
-const dotenv = require("dotenv").config();
+require("dotenv").config();
 const logger = require("./helpers/logger");
 const express = require("express");
 const bodyParser = require("body-parser");
