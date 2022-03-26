@@ -7,6 +7,9 @@ ecrire ici un detail du projet
 ```
 npm install
 ```
+copy .env file from .env.example
+then fill corresponding fields inside .env file
+
 ## Project update
 ```
 git push origin main (envoi des données)
@@ -27,8 +30,3 @@ npm run prod
 ```
 npm run lint
 ```
-
-
-# TODO
-
-- ecrire le readme correctement
