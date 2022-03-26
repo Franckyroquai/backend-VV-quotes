@@ -1,28 +1,26 @@
 # backend-VV-quotes
+```
+ecrire ici un detail du projet
+```
 
-auth and quotes API REST
-
-	- Git bootrapping OK
-	- Vue Bootstrapping OK
 ## Project setup
 ```
-git clone url(copiée de github)
 npm install
 ```
 ## Project update
 ```
 git push origin main (envoi des données)
+git pull origin main (récuprération des données)
 ```
-git pull origin main (récuprérationdes données)
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+npm run dev
 ```
 
-### Compiles and minifies for production
+### Running server for production
 ```
-npm run build
+npm run prod
 ```
 
 ### Lints and fixes files
@@ -30,11 +28,7 @@ npm run build
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
 
 # TODO
 
 - ecrire le readme correctement
-- Brute force and dddos
