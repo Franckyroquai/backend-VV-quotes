@@ -5,6 +5,7 @@ const saltRounds = parseInt(process.env.SALT_ROUNDS);
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
+  //Schéma à respecter pour inscrire un utilisateur dans mongoose
   email: {
     type: String,
     required: true,
@@ -17,6 +18,7 @@ const UserSchema = new Schema({
 });
 
 UserSchema.pre("save", async function (next) {
+  //fonction middle ware qui remplace le password par le hash
   const user = this;
   const hash = await bcrypt.hash(user.password, saltRounds);
 
