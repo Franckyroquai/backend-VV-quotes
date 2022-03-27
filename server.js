@@ -1,8 +1,8 @@
 require("dotenv").config();
 const logger = require("./helpers/logger");
 const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+const bodyParser = require("body-parser"); //rajoute .body sur l'objet request
+const cors = require("cors"); //permet d'outrepasser une faille de sécurité en dev
 const errorHandler = require("./middlewares/errorHandler");
 const { jwtMiddleware } = require("./middlewares/authentication");
 
@@ -17,7 +17,7 @@ const privateAuthRoutes = require("./routes/user/private-routes");
 const publicQuoteRoutes = require("./routes/quote/public-routes");
 const privateQuoteRoutes = require("./routes/quote/private-routes");
 
-app.use(cors());
+app.use(cors()); //app.use (express maintenant tu utilises...) => definit les middleware dans l'ordre à utiliser
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
