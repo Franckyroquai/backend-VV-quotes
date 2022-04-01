@@ -7,7 +7,7 @@ const router = express.Router();
 
 //obtenir une citation random part une méthode js
 router.get("/random-js", async (req, res) => {
-  await quoteModel.find({}, [], async (err, result) => {
+  quoteModel.find({}, [], async (err, result) => {
     if (err) {
       logger.log("erreur:", err.message);
       await res.statut(500).send("error");
