@@ -10,9 +10,9 @@ const quoteModel = require("../../models/quote");
 router.post("/create-one", async (req, res) => {
   const body = req.body;
   const text = body.text;
-  logger.log(text);
+  logger.debug(text);
   const author = body.author || "anonyme";
-  logger.log(author);
+  logger.debug(author);
   try {
     const quote = await quoteModel.create({ text: text, author: author });
     res.json({ quote });
