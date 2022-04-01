@@ -12,11 +12,11 @@ router.get("/random-js", async (req, res) => {
       logger.log("erreur:", err.message);
       await res.statut(500).send("error");
     }
-    const randomQuoteWithId =
+    const randomQuoteWithMetaData =
       result[randomIntFromInterval(0, result.length - 1)];
     const randomQuote = {
-      text: randomQuoteWithId.text,
-      author: randomQuoteWithId.author,
+      text: randomQuoteWithMetaData.text,
+      author: randomQuoteWithMetaData.author,
     };
     res.json(randomQuote);
   });
