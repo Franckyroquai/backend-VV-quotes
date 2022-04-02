@@ -15,11 +15,21 @@ router.post("/create-one", async (req, res) => {
   logger.debug(author);
   try {
     const quote = await quoteModel.create({ text: text, author: author });
-    res.json({ quote });
+    if (quote.text === text) {
+      logger.info("is all okay");
+    } else {
+      res.status(500).send("not okay");
+    }
+    res.status(201).json({ quote });
   } catch (err) {
-    logger.log(err);
-    res.status(409).send(err.message);
-    // next(new Error());
+    logger.error(err.message);
+    if (err.message.includes("Path `text` is required.")) {
+      res.status(400).send("text field is required");
+    } else if (err.message.includes("dup key:")) {
+      res.status(409).send("duplicated quote text");
+    } else {
+      res.status(500).send("server error");
+    }
   }
 });
 

@@ -46,6 +46,7 @@ router.get("/random-js-bis", async (req, res) => {
     const randomQuote = {
       text: randomQuoteWithId.text,
       author: randomQuoteWithId.author,
+
     };
     res.json(randomQuote);
   } catch (err) {
