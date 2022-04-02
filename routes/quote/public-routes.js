@@ -6,11 +6,27 @@ const { randomIntFromInterval } = require("../../helpers/math");
 const router = express.Router();
 
 //obtenir une citation random part une méthode js
+// router.get("/random-js", async (req, res) => {
+//   await quoteModel.find({}, [], async (err, result) => {
+//     if (err) {
+//       logger.log("erreur:", err.message);
+//       await res.statut(500).send("error");
+//     }
+//     const randomQuoteWithId =
+//       result[randomIntFromInterval(0, result.length - 1)];
+//     const randomQuote = {
+//       text: randomQuoteWithId.text,
+//       author: randomQuoteWithId.author,
+//     };
+//     res.json(randomQuote);
+//   });
+// });
+
 router.get("/random-js", async (req, res) => {
   quoteModel.find({}, [], async (err, result) => {
     if (err) {
       logger.log("erreur:", err.message);
-      await res.statut(500).send("error");
+      res.status(500).send("error");
     }
     const randomQuoteWithMetaData =
       result[randomIntFromInterval(0, result.length - 1)];
@@ -20,6 +36,23 @@ router.get("/random-js", async (req, res) => {
     };
     res.json(randomQuote);
   });
+});
+
+router.get("/random-js-bis", async (req, res) => {
+  try {
+    const quoteList = await quoteModel.find({});
+    const randomQuoteWithId =
+      quoteList[randomIntFromInterval(0, quoteList.length - 1)];
+    const randomQuote = {
+      text: randomQuoteWithId.text,
+      author: randomQuoteWithId.author,
+
+    };
+    res.json(randomQuote);
+  } catch (err) {
+    logger.log("erreur:", err.message);
+    res.status(500).send("error");
+  }
 });
 
 //obtenir une citation par une méthode mongoose
