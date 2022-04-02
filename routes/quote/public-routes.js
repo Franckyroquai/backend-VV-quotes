@@ -8,11 +8,11 @@ const router = express.Router();
 router.get("/random-js", async (req, res) => {
   try {
     const quoteList = await quoteModel.find({});
-    const randomQuoteWithId =
+    const randomQuoteWithMetaData =
       quoteList[randomIntFromInterval(0, quoteList.length - 1)];
     const randomQuote = {
-      text: randomQuoteWithId.text,
-      author: randomQuoteWithId.author,
+      text: randomQuoteWithMetaData.text,
+      author: randomQuoteWithMetaData.author,
     };
     res.json(randomQuote);
   } catch (err) {
@@ -24,32 +24,32 @@ router.get("/random-js", async (req, res) => {
 //obtenir une citation par une méthode mongoose
 router.get("/random-mongoose", async (req, res) => {
   const total = await quoteModel.estimatedDocumentCount();
-  const randomQuoteWithId = await quoteModel
+  const randomQouteWithMetaData = await quoteModel
     .findOne({})
     .skip(randomIntFromInterval(0, total - 1))
     .exec();
 
   const randomQuote = {
-    text: randomQuoteWithId.text,
-    author: randomQuoteWithId.author,
+    text: randomQouteWithMetaData.text,
+    author: randomQouteWithMetaData.author,
   };
 
-  logger.log(randomQuoteWithId);
-  logger.info(quoteModel.quoteCleanUp(randomQuoteWithId));
+  logger.log(randomQouteWithMetaData);
+  logger.info(quoteModel.quoteCleanUp(randomQouteWithMetaData));
 
   res.json(randomQuote);
 });
 
 //obtenir une citation par une librairie mongoose
 router.get("/random-mongoose-lib", async (req, res) => {
-  quoteModel.findOneRandom((err, randomQuoteWithId) => {
+  quoteModel.findOneRandom((err, randomQouteWithMetaData) => {
     logger.log(
       "cleaned up quote:\n",
-      quoteModel.quoteCleanUp(randomQuoteWithId)
+      quoteModel.quoteCleanUp(randomQouteWithMetaData)
     );
     const randomQuote = {
-      text: randomQuoteWithId.text,
-      author: randomQuoteWithId.author,
+      text: randomQouteWithMetaData.text,
+      author: randomQouteWithMetaData.author,
     };
     res.json(randomQuote);
   });
