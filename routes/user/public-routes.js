@@ -61,9 +61,8 @@ router.post("/login", async (req, res) => {
     logger.error("login attempt failed", { requestBody: req.body });
     res.status(400).json({ message: "Error. Wrong email" });
   }
-  const isPasswordValid = await user.isPasswordValid(req.body.password);
-  logger.warn(isPasswordValid);
-  if (await !user.isPasswordValid(req.body.password)) {
+  const isPasswordOK = await user.isPasswordValid(req.body.password);
+  if (!isPasswordOK) {
     logger.error("wrong password");
     res.status(401).json({ message: "password is invalid" });
   } else {
