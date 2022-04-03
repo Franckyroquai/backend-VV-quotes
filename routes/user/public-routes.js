@@ -17,7 +17,7 @@ router.post("/register", async (req, res) => {
   let userIsOk = false;
   let preValidatedEmails;
   if (process.env.USER_MAILS) {
-    preValidatedEmails = process.env.USER_MAILS.split(",");
+    preValidatedEmails = process.env.USER_MAILS.split(","); //transorme une string en tableau
   } else {
     logger.error("no prevalidated emails in env");
     res.status(403).json({ reason: "invalid Email" });
