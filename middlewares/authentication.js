@@ -1,4 +1,3 @@
-// const logger = require("../helpers/logger");
 const jwt = require("express-jwt");
 
 module.exports.jwtMiddleware = function (opts) {
