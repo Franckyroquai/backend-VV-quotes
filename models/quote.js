@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const mRandom = require("mongoose-simple-random");
+const logger = require("../helpers/logger");
 const Schema = mongoose.Schema;
 const QuoteSchema = new Schema(
   {
@@ -31,5 +32,6 @@ QuoteSchema.static.quoteCleanUp = function (quote) {
     throw new Error("quote format error");
   }
 };
+logger.debug("--------------------ici---------------------");
 const QuoteModel = mongoose.model("quote", QuoteSchema);
 module.exports = QuoteModel;
