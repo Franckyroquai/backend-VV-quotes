@@ -1,39 +1,42 @@
 if (process.env.NODE_ENV === "dev") {
+  //TODO:DRY
   var casual = require("casual");
 }
 const express = require("express");
 const router = express.Router();
 const logger = require("../../helpers/logger");
 const { randomIntFromInterval } = require("../../helpers/math");
-const quoteModel = require("../../models/quote");
+const { QuoteModel } = require("../../models/sql-quote");
 
 router.post("/create-one", async (req, res) => {
-  const body = req.body;
-  const text = body.text;
-  logger.debug(text);
-  const author = body.author || "anonyme";
-  logger.debug(author);
-  try {
-    const quote = await quoteModel.create({ text: text, author: author });
-    if (quote.text === text) {
-      logger.info("is all okay");
-    } else {
-      res.status(500).send("not okay");
-    }
-    res.status(201).json({ quote });
-  } catch (err) {
-    logger.error(err.message);
-    if (err.message.includes("Path `text` is required.")) {
-      res.status(400).send("text field is required");
-    } else if (err.message.includes("dup key:")) {
-      res.status(409).send("duplicated quote text");
-    } else {
-      res.status(500).send("server error");
-    }
+  var quoteText = req.body.text;
+  var quoteAuthor = req.body.author;
+
+  if (quoteAuthor === undefined || quoteAuthor === "") {
+    //TODO: penser à vérifier la casse de la string Anonyme avec le front
+    quoteAuthor = "Anonyme";
+  }
+
+  if (!quoteText) {
+    res.status(400).json({ message: "text is required for a quote" });
+  }
+
+  var isExistingQuote = await QuoteModel.findOne({
+    where: { text: quoteText },
+  });
+  if (isExistingQuote) {
+    res.status(400).json({ message: "quote already in DB" }); //TODO: vérif status code
+  } else {
+    var quote = await QuoteModel.create({
+      author: quoteAuthor,
+      text: quoteText,
+    });
+    res.json({ quote: { text: quote.text, author: quote.author } });
   }
 });
 
 if (process.env.NODE_ENV === "dev") {
+  //TODO:DRY
   router.post("/generate", async (req, res) => {
     const quotesNumber =
       req.body.numberOfQuotes || randomIntFromInterval(1, 10);
@@ -41,47 +44,41 @@ if (process.env.NODE_ENV === "dev") {
     for (let i = 0; i < quotesNumber; i++) {
       quotesArray.push({ author: casual.name, text: casual.sentence });
     }
-    quoteModel.insertMany(quotesArray, (err, docs) => {
-      if (err) {
-        logger.error(err);
-        res.json({ ok: false });
-      } else {
-        logger.info("Multiple quotes generated", docs);
-        res.json({ ok: true, number: quotesNumber });
-      }
-    });
+    try {
+      const Quotes = await QuoteModel.bulkCreate(quotesArray);
+      logger.debug("SQL", Quotes); //TODO: remove
+      res.json({ ok: true, number: quotesNumber });
+    } catch (err) {
+      logger.error(err);
+      res.json({ ok: false });
+    }
   });
 }
 
-router.delete("/flush", async (req, res) => {
-  const deletedQuotes = await quoteModel.deleteMany({});
-  logger.debug({ deletedQuotes });
-  logger.warn("Quotes Collection FLUSHED");
-  res.json({ flushed: true });
-});
+router.delete("/delete-all", async (req, res) => {
+  // var all = await SQLQuoteModel.findAll({});
+  // var arrayOfIds = [];
+  // for (var object of all) {
+  //   // logger.debug("id:", object.dataValues.id);
+  //   arrayOfIds.push(object.dataValues.id);
+  // }
+  // logger.debug(arrayOfIds);
+  var numberOfDeletedItems = await QuoteModel.destroy({ where: {} });
+  // var numberOfDeletedItems = await SQLQuoteModel.sync({ force: true });
 
-router.delete("/delete", async (req, res) => {
-  const { author, text } = req.body;
-  let filter = {};
-  if (author && !text) {
-    logger.debug("flush author quotes");
-  } else if (text && !author) {
-    logger.debug("flush quote by text");
-  } else if (text && author) {
-    logger.debug("specific author and text quote delete");
-  } else {
-    logger.debug("wrong options for delete quote");
-  }
-
-  const deletedQuote = await quoteModel.deleteMany(filter);
-  res.json({ deletedQuote });
+  res.json({ truc: numberOfDeletedItems });
 });
 
 router.delete("/id", async (req, res) => {
-  const { id } = req.body; //TODO: ici par query segment ce serait bien
-  logger.debug("id:", id);
-  const deletedObject = await quoteModel.findOneAndDelete({ _id: id });
-  res.json(deletedObject);
+  var destroyedId = req.body.id;
+
+  var numberOfDeletedItems = await QuoteModel.destroy({
+    where: {
+      id: destroyedId,
+    },
+  });
+
+  res.json({ id: destroyedId, deleted: !!numberOfDeletedItems }); //!!transforme en booléen
 });
 
 module.exports = router;
