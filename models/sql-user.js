@@ -1,15 +1,18 @@
 const { Sequelize, DataTypes } = require("sequelize");
-const sequelize = require("../services/sql-db");
+const bcrypt = require("bcrypt");
+const sequelize = require("../services/sql-db-connection");
 const logger = require("../helpers/logger");
+const saltRounds = parseInt(process.env.SALT_ROUNDS);
+const { ContactInfoModel } = require("./sql-contact-infos");
 
-const UserModel = sequelize.define(
-  "User",
+const User = sequelize.define(
+  "user",
   {
     // Model attributes are defined here
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      //TODO:vérifier unique: true;
+      unique: true,
     },
     password: {
       type: DataTypes.STRING,
@@ -17,19 +20,28 @@ const UserModel = sequelize.define(
       // allowNull defaults to true
     },
     //TODO:insérer le champ "type"
+    type: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      // allowNull defaults to true
+    },
   },
   {
-    // Other model options go here
+    hooks: {
+      beforeCreate: async (user) => {
+        const hash = await bcrypt.hash(user.password, saltRounds);
+        user.password = hash;
+      },
+    },
   }
 );
 
-//TODO:fonction hachage de mot de passe; vérifier l'authentification du mot de passe
+User.prototype.validPassword = async (password) => {
+  return await bcrypt.compare(password, this.password);
+};
 
-// `sequelize.define` also returns the model
-logger.debug(
-  "------------------------",
-  UserModel === sequelize.models.User,
-  "------------------------"
-); // true
+User.hasOne(ContactInfoModel);
 
-module.exports = { SQLUserModel: UserModel };
+module.exports = {
+  UserModel: User,
+};
