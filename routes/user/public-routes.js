@@ -1,89 +1,94 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const logger = require("../../helpers/logger");
-const UserModel = require("../../models/user");
-const SQLUserModel = require("../../models/sql-user");
-
+const { UserModel } = require("../../models/sql-user");
 const router = express.Router();
+const bcrypt = require("bcrypt");
+
 router.post("/register", async (req, res) => {
-  if (!req.body.email || !req.body.password) {
-    logger.info("for registration email and password are required", {
-      request: req,
+  logger.debug("password ==>", req.body.password);
+  logger.debug("body =>>", req.body);
+  //j'ai besoin d'un email et un mot de passe pour enregistrer un user dans la DB
+  //1 recup email. OK.
+  //2 recup mdp. ok.
+  //3 enregistrer user. ok.
+  //4 répondre au client.
+  //5 gestion erreur absence de mdp
+  //5 bis  si je n'ai pas de mdp alors je renvoi une réponse d'erreur au client
+  //6 si le mot de passe fait moins de x caracteres
+  //7 gestion erreur absence email
+  //8 optionnel vérifier le formatage de l'email
+
+  if (req.body.password === undefined || req.body.password === "") {
+    logger.debug("Il faut un mot de passe pour s'enregistrer");
+    res.status(400).json({ message: "Veuillez indiquer un mot de passe" });
+  } else if (req.body.password.length < 10) {
+    logger.debug("password must have at least 10 characters");
+    res.status(400).json({
+      message: "Le mot de passe doit contenir au moins 10 caractères",
     });
+  } else if (req.body.email === undefined || req.body.email === "") {
+    logger.debug("Email required to subscribe");
     res
       .status(400)
-      .json({ message: "For registration email and password are required" });
-  }
-
-  let userIsOk = false;
-  let preValidatedEmails;
-  if (process.env.USER_MAILS) {
-    preValidatedEmails = process.env.USER_MAILS.split(",");
+      .json({ message: "Veuillez saisir un email pour vous enregistrer" });
+  } else if (
+    !req.body.email.match(
+      // eslint-disable-next-line no-control-regex
+      /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
+    )
+  ) {
+    logger.debug("invalid email");
+    res
+      .status(400)
+      .json({ message: "Veuillez entrez un format d'email valide" });
   } else {
-    logger.error("no prevalidated emails in env");
-    res.status(403).json({ reason: "invalid Email" });
-  }
-  for (let i = 0; i < preValidatedEmails.length; i++) {
-    if (preValidatedEmails[i] === req.body.email) {
-      userIsOk = true;
+    var userEmail = req.body.email;
+    var userPassword = req.body.password;
+    try {
+      var user = await UserModel.create({
+        email: userEmail,
+        password: userPassword,
+      });
+      res.json({ user });
+    } catch (err) {
+      logger.error("erreur async");
+      res.status(500).json();
     }
   }
-  if (!userIsOk) {
-    res.status(403).send("this email can't register");
-    //TODO: throw error ?
-    return;
-  }
-
-  let user = await UserModel.findOne({ email: req.body.email });
-  if (user) {
-    logger.warn("user already registered\n", { request: req.body });
-    res.status(409).json({ message: "user already registered" });
-  }
-  logger.error("req.body register:", req.body);
-  user = await UserModel.create({
-    email: req.body.email,
-    password: req.body.password,
-  });
-  res.json({ registered: user.email });
 });
 
 router.post("/login", async (req, res) => {
-  if (!req.body.email || !req.body.password) {
-    logger.info("Error. Email and Password are Required", {
-      request: req,
+  try {
+    var userEmail = req.body.email;
+    var userPassword = req.body.password;
+    if (userEmail === undefined || userPassword === undefined) {
+      logger.debug("email and password are required");
+      res.status(400).json({ message: "email and password are required" });
+    }
+    const user = await UserModel.findOne({
+      where: { email: userEmail },
     });
-    res.status(400).json({ message: "Error. Email and Password are Required" });
-  }
-  let user = await UserModel.findOne({
-    email: req.body.email,
-  });
-
-  if (!user) {
-    logger.error("login attempt failed", { requestBody: req.body });
-    res.status(400).json({ message: "Error. Wrong email" });
-  }
-  const isPasswordOK = await user.isPasswordValid(req.body.password);
-  if (!isPasswordOK) {
-    logger.error("wrong password");
-    res.status(401).json({ message: "password is invalid" });
-  } else {
-    const token = jwt.sign(
-      {
-        email: user.email,
-        status: "debug user",
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "3 days" } //pas besoin de se loger pendant 3 jours (duree de validite du token)
+    if (!user) {
+      logger.debug("user not registered");
+      res.status(401).json({ message: "user not registered" });
+    }
+    var isPasswordValid = await bcrypt.compare(
+      req.body.password,
+      user.password
     );
-    res.json({ access_token: token }); //renvoi le token au front
+    if (!isPasswordValid) {
+      logger.debug("Wrong password");
+      res.status(401).json({ message: "Wrong password" });
+    }
+    var token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
+    res.status(200).json({ access_token: token });
+  } catch (err) {
+    logger.error(err);
+    res.status(500).json({ message: "internal server error" });
   }
 });
 
-router.delete("/user-flush", async (req, res) => {
-  //FIXME: debug function to remove before prod
-  const result = await UserModel.deleteMany({}); //selectionne toute la selection des users en BD
-  logger.info(result);
-  res.json({ ok: true });
-});
+router.delete("/user-flush", async (req, res) => {});
 
 module.exports = router;
