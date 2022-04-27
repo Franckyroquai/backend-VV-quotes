@@ -4,8 +4,8 @@ const logger = require("../helpers/logger");
 function errorHandler(err, req, res, next) {
   if (err) {
     // logger.error(err);
-    logger.info("error status", err);
-    logger.warn("error truc", err.code);
+    // logger.info("error status", err);
+    // logger.warn("error truc", err.code);
     let status = 500;
     let msg = "internal error";
     if (err.status) {
