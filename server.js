@@ -6,8 +6,8 @@ const cors = require("cors"); //permet d'outrepasser une faille de sécurité en
 const errorHandler = require("./middlewares/errorHandler");
 const { jwtMiddleware } = require("./middlewares/authentication");
 
-require("./services/nosql-db");
-require("./services/sql-db");
+require("./services/sql-db-connection");
+require("./services/sql-db-init");
 
 const app = express();
 
@@ -16,7 +16,7 @@ const port = process.env.PORT || 3000;
 const publicAuthRoutes = require("./routes/user/public-routes");
 const privateAuthRoutes = require("./routes/user/private-routes");
 const publicQuoteRoutes = require("./routes/quote/public-routes");
-// const privateQuoteRoutes = require("./routes/quote/private-routes");
+const privateQuoteRoutes = require("./routes/quote/private-routes");
 
 app.use(cors()); //app.use (express maintenant tu utilises...) => definit les middleware dans l'ordre à utiliser
 
@@ -26,7 +26,7 @@ app.use(express.json());
 app.use("/", publicAuthRoutes); // '/' >>> root ou racine
 app.use("/user", jwtMiddleware(), privateAuthRoutes);
 app.use("/quote", publicQuoteRoutes);
-// app.use("/quote", jwtMiddleware(), privateQuoteRoutes);
+app.use("/quote", jwtMiddleware(), privateQuoteRoutes);
 
 // Handle errors.
 app.use(errorHandler);
