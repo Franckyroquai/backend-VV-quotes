@@ -6,7 +6,7 @@ const express = require("express");
 const router = express.Router();
 const logger = require("../../helpers/logger");
 const { randomIntFromInterval } = require("../../helpers/math");
-const { QuoteModel } = require("../../models/sql-quote");
+const { QuoteModel } = require("../../models/quote");
 
 router.post("/create-one", async (req, res) => {
   var quoteText = req.body.text;
