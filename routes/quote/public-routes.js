@@ -1,7 +1,7 @@
 const express = require("express");
 const logger = require("../../helpers/logger");
 const { randomIntFromInterval } = require("../../helpers/math");
-const { QuoteModel } = require("../../models/sql-quote");
+const { QuoteModel } = require("../../models/quote");
 
 const router = express.Router();
 
