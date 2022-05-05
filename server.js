@@ -6,8 +6,8 @@ const cors = require("cors"); //permet d'outrepasser une faille de sécurité en
 const errorHandler = require("./middlewares/errorHandler");
 const { jwtMiddleware } = require("./middlewares/authentication");
 
-require("./services/sql-db-connection");
-require("./services/sql-db-init");
+require("./services/db-connection");
+require("./services/db-init");
 
 const app = express();
 
