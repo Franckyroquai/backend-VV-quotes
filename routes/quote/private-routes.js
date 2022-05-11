@@ -7,15 +7,18 @@ const router = express.Router();
 const logger = require("../../helpers/logger");
 const { randomIntFromInterval } = require("../../helpers/math");
 const { QuoteModel } = require("../../models/quote");
+const { AuthorModel } = require("../../models/author");
 
 router.post("/create-one", async (req, res) => {
   var quoteText = req.body.text;
-  var quoteAuthor = req.body.author;
+  var quoteAuthorId = req.body.authorId;
 
-  if (quoteAuthor === undefined || quoteAuthor === "") {
-    //TODO: penser à vérifier la casse de la string Anonyme avec le front
-    quoteAuthor = "Anonyme";
-  }
+  // if (quoteAuthor === undefined || quoteAuthor === "") {
+  //   //TODO: penser à vérifier la casse de la string Anonyme avec le front
+  //   quoteAuthor = "Anonyme";
+  // }
+
+  //verifier qu'il existe un autheur avec l'id mention'e
 
   if (!quoteText) {
     res.status(400).json({ message: "text is required for a quote" });
@@ -28,10 +31,10 @@ router.post("/create-one", async (req, res) => {
     res.status(400).json({ message: "quote already in DB" }); //TODO: vérif status code
   } else {
     var quote = await QuoteModel.create({
-      author: quoteAuthor,
       text: quoteText,
+      authorId: quoteAuthorId,
     });
-    res.json({ quote: { text: quote.text, author: quote.author } });
+    res.json({ quote: { text: quote.text, authorId: quote.authorId } });
   }
 });
 
@@ -41,12 +44,24 @@ if (process.env.NODE_ENV === "dev") {
     const quotesNumber =
       req.body.numberOfQuotes || randomIntFromInterval(1, 10);
     let quotesArray = [];
+    var authorList = await AuthorModel.findAll({ attributes: ["id"] });
+    logger.debug(authorList);
+    var authorIdList = [];
+    for (var idx = 0; idx < authorList.length; idx++) {
+      authorIdList.push(authorList[idx].id);
+    }
+    logger.info(authorIdList);
     for (let i = 0; i < quotesNumber; i++) {
-      quotesArray.push({ author: casual.name, text: casual.sentence });
+      var authorIdIDX = randomIntFromInterval(0, authorIdList.length - 1);
+      logger.log(authorIdIDX);
+      quotesArray.push({
+        authorId: authorIdList[authorIdIDX],
+        text: casual.sentence,
+      });
     }
     try {
       const Quotes = await QuoteModel.bulkCreate(quotesArray);
-      logger.debug("SQL", Quotes); //TODO: remove
+      // logger.debug("SQL", Quotes); //TODO: remove
       res.json({ ok: true, number: quotesNumber });
     } catch (err) {
       logger.error(err);
