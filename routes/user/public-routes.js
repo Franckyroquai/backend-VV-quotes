@@ -6,18 +6,18 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 
 router.post("/register", async (req, res) => {
-  logger.debug("password ==>", req.body.password);
-  logger.debug("body =>>", req.body);
+  // logger.debug("password ==>", req.body.password);
+  // logger.debug("body =>>", req.body);
   //j'ai besoin d'un email et un mot de passe pour enregistrer un user dans la DB
   //1 recup email. OK.
   //2 recup mdp. ok.
   //3 enregistrer user. ok.
   //4 répondre au client.
-  //5 gestion erreur absence de mdp
-  //5 bis  si je n'ai pas de mdp alors je renvoi une réponse d'erreur au client
-  //6 si le mot de passe fait moins de x caracteres
-  //7 gestion erreur absence email
-  //8 optionnel vérifier le formatage de l'email
+  //5 gestion erreur absence de mdp.
+  //5 bis  si je n'ai pas de mdp alors je renvoi une réponse d'erreur au client.
+  //6 si le mot de passe fait moins de x caracteres.
+  //7 gestion erreur absence email.
+  //8 optionnel vérifier le formatage de l'email.
 
   if (req.body.password === undefined || req.body.password === "") {
     logger.debug("Il faut un mot de passe pour s'enregistrer");
@@ -45,15 +45,25 @@ router.post("/register", async (req, res) => {
   } else {
     var userEmail = req.body.email;
     var userPassword = req.body.password;
+    var userType = "lambda";
     try {
       var user = await UserModel.create({
         email: userEmail,
         password: userPassword,
+        type: userType,
       });
       res.json({ user });
     } catch (err) {
-      logger.error("erreur async");
-      res.status(500).json();
+      logger.debug(err);
+      if (
+        err.original &&
+        err.original.code === "ER_DUP_ENTRY" &&
+        err.original.sqlMessage.includes("'users.email'")
+      ) {
+        res.status(409).json({ message: "user already registered" });
+      } else {
+        res.status(500).json({ message: "unknown server error" });
+      }
     }
   }
 });
@@ -81,7 +91,10 @@ router.post("/login", async (req, res) => {
       logger.debug("Wrong password");
       res.status(401).json({ message: "Wrong password" });
     }
-    var token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
+    var token = jwt.sign(
+      { email: user.email, type: user.type },
+      process.env.JWT_SECRET
+    );
     res.status(200).json({ access_token: token });
   } catch (err) {
     logger.error(err);
