@@ -1,7 +1,7 @@
 const { UserModel } = require("../models/user");
 const { ContactInfoModel } = require("../models/contact-infos");
 const { QuoteModel } = require("../models/quote");
-const { AuthorModel } = require("../models/authors");
+const { AuthorModel } = require("../models/author");
 const { PostModel } = require("../models/post");
 const { CategoryModel } = require("../models/category");
 const { CommentModel } = require("../models/comments");
