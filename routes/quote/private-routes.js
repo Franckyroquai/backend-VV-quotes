@@ -96,4 +96,16 @@ router.delete("/id", async (req, res) => {
   res.json({ id: destroyedId, deleted: !!numberOfDeletedItems }); //!!transforme en booléen
 });
 
+router.post("/update", async (req, res) => {
+  res.send("todo");
+});
+
+router.post("/link-author", async (req, res) => {
+  res.send("todo");
+});
+
+router.post("/link-user", async (req, res) => {
+  res.send("todo");
+});
+
 module.exports = router;
