@@ -102,6 +102,12 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.delete("/user-flush", async (req, res) => {});
+router.get("/user-from-post", async (req, res) => {
+  res.send("todo");
+});
+
+router.get("/user-from-comment", async (req, res) => {
+  res.send("todo");
+});
 
 module.exports = router;
