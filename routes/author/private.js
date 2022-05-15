@@ -49,4 +49,20 @@ router.get("/all", async (req, res) => {
   }
 });
 
+router.get("/one", async (req, res) => {
+  res.send("todo");
+});
+
+router.post("/update", async (req, res) => {
+  res.send("todo");
+});
+
+router.post("/delete", async (req, res) => {
+  res.send("todo");
+});
+
+router.post("/link", async (req, res) => {
+  res.send("todo");
+});
+
 module.exports = router;
