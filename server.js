@@ -13,11 +13,13 @@ const app = express();
 
 const port = process.env.PORT || 3000;
 
-const publicAuthRoutes = require("./routes/user/public-routes");
-const privateAuthRoutes = require("./routes/user/private-routes");
-const publicQuoteRoutes = require("./routes/quote/public-routes");
-const privateQuoteRoutes = require("./routes/quote/private-routes");
+const publicAuthRoutes = require("./routes/user/public");
+const privateAuthRoutes = require("./routes/user/private");
+const publicQuoteRoutes = require("./routes/quote/public");
+const privateQuoteRoutes = require("./routes/quote/private");
 const privateAuthorRoutes = require("./routes/author/private");
+const publicPostRoutes = require("./routes/post/public");
+const privatePostRoutes = require("./routes/post/private");
 
 app.use(cors()); //app.use (express maintenant tu utilises...) => definit les middleware dans l'ordre à utiliser
 
@@ -29,6 +31,8 @@ app.use("/user", jwtMiddleware(), privateAuthRoutes);
 app.use("/quote", publicQuoteRoutes);
 app.use("/quote", jwtMiddleware(), privateQuoteRoutes);
 app.use("/author", jwtMiddleware(), privateAuthorRoutes);
+app.use("/post", publicPostRoutes);
+app.use("/post", jwtMiddleware(), privatePostRoutes);
 
 // Handle errors.
 app.use(errorHandler);
