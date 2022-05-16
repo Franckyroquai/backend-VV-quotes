@@ -6,52 +6,33 @@ const Post = sequelize.define(
   "post",
   {
     // Model attributes are defined here
-    text: {
+    content: {
       type: DataTypes.STRING(8000),
       allowNull: false,
       //TODO:vérifier unique: true;
     },
-    Titre: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
-      // allowNull defaults to true
     },
-    PostAuthor: {
+    subtitle: {
       type: DataTypes.STRING,
-      allowNull: false,
-      // allowNull defaults to true
+      allowNull: true,
     },
-    Reference: {
+    link: {
       type: DataTypes.STRING,
+      allowNull: true,
+    },
+    numberOfViews: {
+      type: DataTypes.BIGINT,
       allowNull: false,
       // allowNull defaults to true
     },
-    Link: {
-      type: DataTypes.STRING,
+    numberOfLikes: {
+      type: DataTypes.BIGINT,
       allowNull: false,
       // allowNull defaults to true
     },
-    Image: {
-      type: DataTypes.BLOB,
-      allowNull: false,
-      // allowNull defaults to true
-    },
-    NumberOfViews: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      // allowNull defaults to true
-    },
-    NumberOfLikes: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      // allowNull defaults to true
-    },
-    // email: {
-    //   //A Garder ou à conserver dans users ???
-    //   type: DataTypes.STRING,
-    //   allowNull: false,
-    //   unique: true,
-    // },
 
     createdAt: {
       type: DataTypes.DATE,
