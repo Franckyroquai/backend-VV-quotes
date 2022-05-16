@@ -1,10 +1,10 @@
 const { UserModel } = require("../models/user");
-const { ContactInfoModel } = require("../models/contact-infos");
+const { ContactInfoModel } = require("../models/contact-info");
 const { QuoteModel } = require("../models/quote");
 const { AuthorModel } = require("../models/author");
 const { PostModel } = require("../models/post");
 const { CategoryModel } = require("../models/category");
-const { CommentModel } = require("../models/comments");
+const { CommentModel } = require("../models/comment");
 const { syncronize } = require("../helpers/sql");
 const logger = require("../helpers/logger");
 
