@@ -2,14 +2,14 @@ const { Model } = require("sequelize");
 const logger = require("./logger");
 const typeOfSync = process.env.DB_SYNC_TYPE;
 
-logger.debug("db sync type:", typeOfSync);
-logger.debug("type of TypeOfSync:", typeof typeOfSync);
+// logger.debug("db sync type:", typeOfSync);
+// logger.debug("type of TypeOfSync:", typeof typeOfSync);
 
 async function syncronize(model, whichOne) {
   // if (!model || !(model instanceof Model)) {
   //   throw new Error("texte d'erreur adapté");
   // }
-  logger.warn("model: ", whichOne);
+  // logger.warn("model: ", whichOne);
   // logger.error("--- model infos ---");
   // logger.debug(model);
   // logger.debug(typeof model);
