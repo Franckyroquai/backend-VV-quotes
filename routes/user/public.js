@@ -79,7 +79,7 @@ router.post("/login", async (req, res) => {
       res.status(401).json({ message: "Wrong password" });
     }
     var token = jwt.sign(
-      { email: user.email, type: user.type },
+      { email: user.email, type: user.type, id: user.id }, //vient de la BDD
       process.env.JWT_SECRET
     );
     res.status(200).json({ access_token: token });
