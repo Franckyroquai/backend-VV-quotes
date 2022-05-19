@@ -1,29 +1,19 @@
 if (process.env.NODE_ENV === "dev") {
-  //TODO:DRY
   var casual = require("casual");
+  const { AuthorModel } = require("../../models/author");
 }
 const express = require("express");
 const router = express.Router();
 const logger = require("../../helpers/logger");
 const { randomIntFromInterval } = require("../../helpers/math");
 const { QuoteModel } = require("../../models/quote");
-const { AuthorModel } = require("../../models/author");
 
 router.post("/create-one", async (req, res) => {
   var quoteText = req.body.text;
   var quoteAuthorId = req.body.authorId;
-
-  // if (quoteAuthor === undefined || quoteAuthor === "") {
-  //   //TODO: penser à vérifier la casse de la string Anonyme avec le front
-  //   quoteAuthor = "Anonyme";
-  // }
-
-  //verifier qu'il existe un autheur avec l'id mention'e
-
   if (!quoteText) {
     res.status(400).json({ message: "text is required for a quote" });
   }
-
   var isExistingQuote = await QuoteModel.findOne({
     where: { text: quoteText },
   });
@@ -33,30 +23,30 @@ router.post("/create-one", async (req, res) => {
     var quote = await QuoteModel.create({
       text: quoteText,
       authorId: quoteAuthorId,
+      userId: req.user.id,
     });
     res.json({ quote: { text: quote.text, authorId: quote.authorId } });
   }
 });
 
 if (process.env.NODE_ENV === "dev") {
-  //TODO:DRY
   router.post("/generate", async (req, res) => {
     const quotesNumber =
       req.body.numberOfQuotes || randomIntFromInterval(1, 10);
-    let quotesArray = [];
-    var authorList = await AuthorModel.findAll({ attributes: ["id"] });
-    logger.debug(authorList);
+    var authorList = await AuthorModel.findAll();
+    // logger.debug(authorList);
     var authorIdList = [];
     for (var idx = 0; idx < authorList.length; idx++) {
       authorIdList.push(authorList[idx].id);
     }
     logger.info(authorIdList);
+    let quotesArray = [];
     for (let i = 0; i < quotesNumber; i++) {
-      var authorIdIDX = randomIntFromInterval(0, authorIdList.length - 1);
-      logger.log(authorIdIDX);
       quotesArray.push({
-        authorId: authorIdList[authorIdIDX],
+        authorId:
+          authorIdList[randomIntFromInterval(0, authorIdList.length - 1)],
         text: casual.sentence,
+        userId: 1,
       });
     }
     try {
@@ -97,15 +87,49 @@ router.delete("/id", async (req, res) => {
 });
 
 router.post("/update", async (req, res) => {
-  res.send("todo");//TODO: to implement
+  try {
+    logger.error(req.body);
+    const quoteToUpdate = await QuoteModel.findOne({
+      where: { id: req.body.id },
+    });
+    const updatedQuote = await quoteToUpdate.update({
+      text: req.body.text,
+      authorId: req.body.authorId,
+      userId: req.user.id,
+    });
+    var updatedAuthor = await updatedQuote.getAuthor().then((result) => {
+      logger.debug(result);
+      return { name: result.name, id: result.id };
+    });
+    res.status(200).json({ text: updatedQuote.text, author: updatedAuthor });
+  } catch (error) {
+    logger.debug(error);
+    res.status(500).json({ message: "server error" });
+  }
 });
 
 router.post("/link-author", async (req, res) => {
-  res.send("todo");//TODO: to implement
+  try {
+    const quote = await QuoteModel.findOne({ where: { id: req.body.id } });
+    const quoteWithAuthor = await quote.update({ authorId: req.body.authorId });
+    const authorLinked = await quoteWithAuthor.getAuthor();
+    res.status(200).json({ text: quote.text, author: authorLinked.name });
+  } catch (error) {
+    logger.debug("server error");
+    res.status(500).json({ message: "server error" });
+  }
 });
 
 router.post("/link-user", async (req, res) => {
-  res.send("todo");//TODO: to implement
+  try {
+    const quote = await QuoteModel.findOne({ where: { id: req.body.id } });
+    const quoteWithUser = await quote.update({ userId: req.user.id });
+    const userLinked = await quoteWithUser.getUser();
+    res.status(200).json({ text: quote.text, user: userLinked.email });
+  } catch (error) {
+    logger.debug("server error");
+    res.status(500).json({ message: "server error" });
+  }
 });
 
 module.exports = router;
