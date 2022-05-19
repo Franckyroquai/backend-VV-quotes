@@ -97,7 +97,29 @@ router.post("/create-one", async (req, res) => {
 });
 
 router.post("/update-one", async (req, res) => {
-  res.send("todo"); //TODO: to implement
+  //TODO:faire gestion d'erreurs et fonction de sanitized
+  try {
+    const postToUpdate = req.body.id;
+    var updatedPost = await PostModel.update(
+      {
+        content: req.body.content,
+        title: req.body.title,
+        subtitle: req.body.subtitle,
+        link: req.body.link,
+        numberOfViews: req.body.numberOfViews,
+        numberOfLikes: req.body.numberOfLikes,
+      },
+      {
+        where: {
+          id: postToUpdate,
+        },
+      }
+    );
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    logger.debug("server error");
+    res.status(500).json({ message: "server error" });
+  }
 });
 
 router.post("/delete-one", async (req, res) => {
