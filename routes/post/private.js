@@ -4,7 +4,9 @@ const logger = require("../../helpers/logger");
 
 const { PostModel } = require("../../models/post");
 
-function createPostSanitizeRequest(requestBody) {
+function createPostSanitizeRequest(request) {
+  var requestBody = request.body;
+  var userId = request.user.id; //id depuis le jwt grâce au middleware
   var sanitizedObject = {};
   if (!requestBody) {
     return false;
@@ -31,7 +33,6 @@ function createPostSanitizeRequest(requestBody) {
     Object.assign(sanitizedObject, { subtitle: requestBody.subtitle });
   }
   if (requestBody.link) {
-    logger.warn("here i am");
     if (
       !(requestBody.link === "string") ||
       !requestBody.link.match(
@@ -42,29 +43,56 @@ function createPostSanitizeRequest(requestBody) {
     }
     Object.assign(sanitizedObject, { link: requestBody.link });
   }
+  if (requestBody.categoryId) {
+    if (
+      !(typeof requestBody.categoryId === "number") ||
+      !(requestBody.categoryId > 0)
+    ) {
+      return false;
+    }
+    Object.assign(sanitizedObject, { categoryId: requestBody.categoryId });
+  }
 
   Object.assign(sanitizedObject, {
     content: requestBody.content,
     title: requestBody.title,
     numberOfLikes: 0,
     numberOfViews: 0,
+    userId: userId,
   });
-  logger.debug("sanitized create post object", sanitizedObject);
+  // logger.debug("sanitized create post object", sanitizedObject);
   return sanitizedObject;
 }
 
 router.post("/create-one", async (req, res) => {
+  // logger.debug(req.user.id);
   try {
-    var sanitized = createPostSanitizeRequest(req.body);
-    if (sanitized) {
-      const newPost = await PostModel.create(sanitized);
-      res.status(200).json(newPost); //créer la relation du user à la création du post
+    var sanitizedRequest = createPostSanitizeRequest(req);
+    if (sanitizedRequest) {
+      const newPost = await PostModel.create(sanitizedRequest);
+      res.status(200).json(newPost);
     } else {
       res.status(400).json({ message: "bad request" });
     }
   } catch (error) {
-    logger.debug("server error in post create-one");
-    res.status(500).json({ message: "server error" });
+    // logger.error(Object.keys(error));
+    logger.debug("----");
+    logger.warn(error.name);
+    logger.warn(error.original.errno);
+    logger.warn(error.original.sqlMessage);
+    logger.warn(error.fields);
+    logger.warn(error.table);
+    logger.warn(error.value); // ???
+    logger.debug("----");
+    if (error.name === "SequelizeForeignKeyConstraintError") {
+      var message = `SQL Constraint Error parameter ${error.fields[0]} with value ${error.value} doesn't exists`;
+      res.status(442).json({
+        message,
+        type: "Model Relation Constraint Error",
+      });
+    } else {
+      res.status(500).json({ message: "server error" });
+    }
   }
 });
 
