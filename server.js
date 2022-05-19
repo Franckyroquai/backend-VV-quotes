@@ -20,6 +20,8 @@ const privateQuoteRoutes = require("./routes/quote/private");
 const privateAuthorRoutes = require("./routes/author/private");
 const publicPostRoutes = require("./routes/post/public");
 const privatePostRoutes = require("./routes/post/private");
+const publicCommentRoutes = require("./routes/comment/private");
+const privateCommentRoutes = require("./routes/comment/private");
 
 app.use(cors()); //app.use (express maintenant tu utilises...) => definit les middleware dans l'ordre à utiliser
 
@@ -33,6 +35,8 @@ app.use("/quote", jwtMiddleware(), privateQuoteRoutes);
 app.use("/author", jwtMiddleware(), privateAuthorRoutes);
 app.use("/post", publicPostRoutes);
 app.use("/post", jwtMiddleware(), privatePostRoutes);
+app.use("/comment", publicCommentRoutes);
+app.use("/comment", jwtMiddleware(), privateCommentRoutes);
 
 // Handle errors.
 app.use(errorHandler);
