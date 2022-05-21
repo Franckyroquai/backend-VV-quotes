@@ -4,10 +4,10 @@ const logger = require("../../helpers/logger");
 
 const { PostModel } = require("../../models/post");
 
-function createPostSanitizeRequest(request) {
+function sanitizeCreatePostRequest(request) {
+  var sanitizedObject = {};
   var requestBody = request.body;
   var userId = request.user.id; //id depuis le jwt grâce au middleware
-  var sanitizedObject = {};
   if (!requestBody) {
     return false;
   }
@@ -64,26 +64,31 @@ function createPostSanitizeRequest(request) {
   return sanitizedObject;
 }
 
+function sanitizeUpdatePostRequest(request) {
+  var sanitizedObject = {};
+  var requestBody = request.body;
+  //content title subtitle link categoryId postId
+
+  if (!requestBody) {
+    return false;
+  }
+  if (!requestBody.id || !(typeof requestBody.id === "number")) {
+    return false;
+  } else {
+    Object.assign(sanitizedObject, { id: requestBody.id });
+  }
+}
+
 router.post("/create-one", async (req, res) => {
-  // logger.debug(req.user.id);
   try {
-    var sanitizedRequest = createPostSanitizeRequest(req);
-    if (sanitizedRequest) {
-      const newPost = await PostModel.create(sanitizedRequest);
+    var sanitizedPostObject = sanitizeCreatePostRequest(req);
+    if (sanitizedPostObject) {
+      const newPost = await PostModel.create(sanitizedPostObject);
       res.status(200).json(newPost);
     } else {
       res.status(400).json({ message: "bad request" });
     }
   } catch (error) {
-    // logger.error(Object.keys(error));
-    logger.debug("----");
-    logger.warn(error.name);
-    logger.warn(error.original.errno);
-    logger.warn(error.original.sqlMessage);
-    logger.warn(error.fields);
-    logger.warn(error.table);
-    logger.warn(error.value); // ???
-    logger.debug("----");
     if (error.name === "SequelizeForeignKeyConstraintError") {
       var message = `SQL Constraint Error parameter ${error.fields[0]} with value ${error.value} doesn't exists`;
       res.status(442).json({
