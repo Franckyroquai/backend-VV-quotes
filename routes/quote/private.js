@@ -86,22 +86,79 @@ router.delete("/id", async (req, res) => {
   res.json({ id: destroyedId, deleted: !!numberOfDeletedItems }); //!!transforme en booléen
 });
 
+function sanitizeQuoteUpdateRequest(request) {
+  var sanitizedObject = {}; // objet vide
+  var requestBody = request.body;
+  logger.info(request.headers);
+  //text, authorId, userId, quoteId
+  // avoir 1 body dans la requete;
+  if (!requestBody) {
+    return false;
+  }
+  if (!requestBody.id || !(typeof requestBody.id === "number")) {
+    return false;
+  } else {
+    Object.assign(sanitizedObject, { id: requestBody.id });
+    logger.debug("sanitized object after id treatment", sanitizedObject);
+  }
+
+  if (requestBody.text) {
+    if (!(typeof requestBody.text === "string")) {
+      return false;
+    } else {
+      Object.assign(sanitizedObject, { text: requestBody.text });
+      logger.debug("sanitized object after text treatment", sanitizedObject);
+    }
+  }
+
+  if (requestBody.authorId) {
+    if (!(typeof requestBody.authorId === "number")) {
+      return false;
+    } else {
+      Object.assign(sanitizedObject, { authorId: requestBody.authorId });
+      logger.debug(
+        "sanitized object after authorId treatment",
+        sanitizedObject
+      );
+    }
+  }
+
+  if (requestBody.userId) {
+    if (!(typeof requestBody.userId === "number")) {
+      return false;
+    } else {
+      Object.assign(sanitizedObject, { userId: requestBody.userId });
+      logger.debug("sanitized object after userId treatment", sanitizedObject);
+    }
+  }
+  return sanitizedObject;
+}
+
 router.post("/update", async (req, res) => {
   try {
-    logger.error(req.body);
-    const quoteToUpdate = await QuoteModel.findOne({
-      where: { id: req.body.id },
-    });
-    const updatedQuote = await quoteToUpdate.update({
-      text: req.body.text,
-      authorId: req.body.authorId,
-      userId: req.user.id,
-    });
-    var updatedAuthor = await updatedQuote.getAuthor().then((result) => {
-      logger.debug(result);
-      return { name: result.name, id: result.id };
-    });
-    res.status(200).json({ text: updatedQuote.text, author: updatedAuthor });
+    // logger.error(req.body);
+    var sanitized = sanitizeQuoteUpdateRequest(req);
+    if (sanitized) {
+      const quoteToUpdate = await QuoteModel.findOne({
+        where: { id: req.body.id },
+      });
+      const updatedQuote = await quoteToUpdate.update(sanitized);
+      res.status(200).json({
+        id: updatedQuote.id,
+        text: updatedQuote.text,
+        authorId: updatedQuote.authorId,
+        userId: updatedQuote.userId,
+      });
+    } else {
+      res.status(400).json({ message: "bad request" });
+    }
+    // var updatedAuthor = await updatedQuote.getAuthor().then((result) => {
+    //   // logger.debug(result);
+    //   return { name: result.name, id: result.id };
+    // });
+    // var updatedUser = await updatedQuote.getUser().then((result) => {
+    //   return { email: result.email, id: result.id };
+    // });
   } catch (error) {
     logger.debug(error);
     res.status(500).json({ message: "server error" });
@@ -111,9 +168,10 @@ router.post("/update", async (req, res) => {
 router.post("/link-author", async (req, res) => {
   try {
     const quote = await QuoteModel.findOne({ where: { id: req.body.id } });
-    const quoteWithAuthor = await quote.update({ authorId: req.body.authorId });
-    const authorLinked = await quoteWithAuthor.getAuthor();
-    res.status(200).json({ text: quote.text, author: authorLinked.name });
+    const updatedQuote = await quote.update({ authorId: req.body.authorId });
+    res
+      .status(200)
+      .json({ id: updatedQuote.id, authorId: updatedQuote.authorId });
   } catch (error) {
     logger.debug("server error");
     res.status(500).json({ message: "server error" });
@@ -122,12 +180,15 @@ router.post("/link-author", async (req, res) => {
 
 router.post("/link-user", async (req, res) => {
   try {
-    const quote = await QuoteModel.findOne({ where: { id: req.body.id } });
-    const quoteWithUser = await quote.update({ userId: req.user.id });
-    const userLinked = await quoteWithUser.getUser();
-    res.status(200).json({ text: quote.text, user: userLinked.email });
+    logger.info(req.body);
+    const quote = await QuoteModel.findOne({ where: { id: req.body.quoteId } });
+    const quoteWithUser = await quote.update({ userId: req.body.userId });
+    res
+      .status(200)
+      .json({ id: quoteWithUser.id, userId: quoteWithUser.userId });
   } catch (error) {
     logger.debug("server error");
+    logger.debug(error);
     res.status(500).json({ message: "server error" });
   }
 });
