@@ -1,6 +1,6 @@
 if (process.env.NODE_ENV === "dev") {
   //TODO:DRY
-  var casual = require("casual"); //Fake data generator
+  var casual = require("casual");
 }
 const express = require("express");
 const router = express.Router();
@@ -50,19 +50,19 @@ router.get("/all", async (req, res) => {
 });
 
 router.get("/one", async (req, res) => {
-  res.send("todo");//TODO: to implement
+  res.send("todo"); //TODO: to implement
 });
 
 router.post("/update", async (req, res) => {
-  res.send("todo");//TODO: to implement
+  res.send("todo"); //TODO: to implement
 });
 
 router.post("/delete", async (req, res) => {
-  res.send("todo");//TODO: to implement
+  res.send("todo"); //TODO: to implement
 });
 
 router.post("/link", async (req, res) => {
-  res.send("todo");//TODO: to implement
+  res.send("todo"); //TODO: to implement
 });
 
 module.exports = router;
