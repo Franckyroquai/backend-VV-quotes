@@ -5,7 +5,6 @@ const logger = require("../helpers/logger");
 const ContactInfo = sequelize.define(
   "contact-info",
   {
-    // Model attributes are defined here
     firstName: {
       type: DataTypes.STRING(8000),
       allowNull: false,
@@ -16,12 +15,6 @@ const ContactInfo = sequelize.define(
       allowNull: false,
       // allowNull defaults to true
     },
-    // email: {
-    //   //A Garder ou à conserver dans users ???
-    //   type: DataTypes.STRING,
-    //   allowNull: false,
-    //   unique: true,
-    // },
     phoneNumber: {
       type: DataTypes.STRING,
       allowNull: false,
