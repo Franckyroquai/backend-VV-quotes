@@ -1,7 +1,7 @@
 const tracer = require("tracer");
 let logger;
 if (process.env.NODE_ENV === "dev") {
-  logger = tracer.colorConsole({ level: 0 }); //en dev
+  logger = tracer.colorConsole({ level: 0 });
 } else if (process.env.NODE_ENV === " prod") {
   logger = tracer.console({ level: "warn" });
 } else {
