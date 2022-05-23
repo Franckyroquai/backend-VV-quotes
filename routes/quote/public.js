@@ -14,15 +14,7 @@ router.get("/random-js", async (req, res) => {
 
     var randomQuote = allQuotesArray[randomIdx];
 
-    logger.warn(randomQuote);
-
-    // var authorOfRandomQuote = await AuthorModel.findOne({
-    //   where: { id: randomQuote.authorId },
-    // });
-
     var authorOfRandomQuote = await randomQuote.getAuthor();
-
-    logger.warn(authorOfRandomQuote);
 
     res.json({
       text: randomQuote.dataValues.text,
@@ -34,13 +26,7 @@ router.get("/random-js", async (req, res) => {
   }
 });
 
-//Obtenir la liste de toutes les citations
 router.get("/all", async (req, res) => {
-  // var allQuotes = await QuoteModel.findAll({
-  //   attributes: ["text", "author"],
-  // });
-  // logger.debug(allQuotes);
-  // res.json(allQuotes);
   try {
     var allQuotes = await QuoteModel.findAll({ include: AuthorModel });
     var newArray = [];
