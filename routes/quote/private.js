@@ -87,48 +87,35 @@ router.delete("/id", async (req, res) => {
 });
 
 function sanitizeQuoteUpdateRequest(request) {
-  var sanitizedObject = {}; // objet vide
+  var sanitizedObject = {};
   var requestBody = request.body;
-  logger.info(request.headers);
-  //text, authorId, userId, quoteId
-  // avoir 1 body dans la requete;
   if (!requestBody) {
     return false;
   }
-  if (!requestBody.id || !(typeof requestBody.id === "number")) {
+  if (!requestBody.id || typeof requestBody.id != "number") {
     return false;
   } else {
     Object.assign(sanitizedObject, { id: requestBody.id });
-    logger.debug("sanitized object after id treatment", sanitizedObject);
   }
-
   if (requestBody.text) {
-    if (!(typeof requestBody.text === "string")) {
+    if (typeof requestBody.text != "string") {
       return false;
     } else {
       Object.assign(sanitizedObject, { text: requestBody.text });
-      logger.debug("sanitized object after text treatment", sanitizedObject);
     }
   }
-
   if (requestBody.authorId) {
-    if (!(typeof requestBody.authorId === "number")) {
+    if (typeof requestBody.authorId != "number") {
       return false;
     } else {
       Object.assign(sanitizedObject, { authorId: requestBody.authorId });
-      logger.debug(
-        "sanitized object after authorId treatment",
-        sanitizedObject
-      );
     }
   }
-
   if (requestBody.userId) {
-    if (!(typeof requestBody.userId === "number")) {
+    if (typeof requestBody.userId != "number") {
       return false;
     } else {
       Object.assign(sanitizedObject, { userId: requestBody.userId });
-      logger.debug("sanitized object after userId treatment", sanitizedObject);
     }
   }
   return sanitizedObject;
@@ -136,13 +123,13 @@ function sanitizeQuoteUpdateRequest(request) {
 
 router.post("/update", async (req, res) => {
   try {
-    // logger.error(req.body);
-    var sanitized = sanitizeQuoteUpdateRequest(req);
-    if (sanitized) {
+    var sanitizedObject = sanitizeQuoteUpdateRequest(req);
+    logger.debug("try to debug: ", sanitizedObject);
+    if (sanitizedObject) {
       const quoteToUpdate = await QuoteModel.findOne({
         where: { id: req.body.id },
       });
-      const updatedQuote = await quoteToUpdate.update(sanitized);
+      const updatedQuote = await quoteToUpdate.update(sanitizedObject);
       res.status(200).json({
         id: updatedQuote.id,
         text: updatedQuote.text,
@@ -152,13 +139,6 @@ router.post("/update", async (req, res) => {
     } else {
       res.status(400).json({ message: "bad request" });
     }
-    // var updatedAuthor = await updatedQuote.getAuthor().then((result) => {
-    //   // logger.debug(result);
-    //   return { name: result.name, id: result.id };
-    // });
-    // var updatedUser = await updatedQuote.getUser().then((result) => {
-    //   return { email: result.email, id: result.id };
-    // });
   } catch (error) {
     logger.debug(error);
     res.status(500).json({ message: "server error" });
