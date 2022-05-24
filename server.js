@@ -17,11 +17,15 @@ const publicAuthRoutes = require("./routes/user/public");
 const privateAuthRoutes = require("./routes/user/private");
 const publicQuoteRoutes = require("./routes/quote/public");
 const privateQuoteRoutes = require("./routes/quote/private");
+const publicAuthorRoutes = require("./routes/author/public");
 const privateAuthorRoutes = require("./routes/author/private");
 const publicPostRoutes = require("./routes/post/public");
 const privatePostRoutes = require("./routes/post/private");
 const publicCommentRoutes = require("./routes/comment/private");
 const privateCommentRoutes = require("./routes/comment/private");
+const publicCategoryRoutes = require("./routes/category/public");
+const privateCategoryRoutes = require("./routes/category/private");
+const privateContactInfoRoutes = require("./routes/contact-info/private");
 
 app.use(cors()); //app.use (express maintenant tu utilises...) => definit les middleware dans l'ordre à utiliser
 
@@ -32,11 +36,15 @@ app.use("/", publicAuthRoutes); // '/' >>> root ou racine
 app.use("/user", jwtMiddleware(), privateAuthRoutes);
 app.use("/quote", publicQuoteRoutes);
 app.use("/quote", jwtMiddleware(), privateQuoteRoutes);
+app.use("/author", publicAuthorRoutes);
 app.use("/author", jwtMiddleware(), privateAuthorRoutes);
 app.use("/post", publicPostRoutes);
 app.use("/post", jwtMiddleware(), privatePostRoutes);
 app.use("/comment", publicCommentRoutes);
 app.use("/comment", jwtMiddleware(), privateCommentRoutes);
+app.use("/category", publicCategoryRoutes);
+app.use("/category", jwtMiddleware(), privateCategoryRoutes);
+app.use("./contact-info", jwtMiddleware(), privateContactInfoRoutes);
 
 // Handle errors.
 app.use(errorHandler);
