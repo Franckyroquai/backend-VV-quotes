@@ -1,4 +1,4 @@
-const tracer = require("tracer");
+var tracer = require("tracer");
 let logger;
 if (process.env.NODE_ENV === "dev") {
   logger = tracer.colorConsole({ level: 0 });
