@@ -1,10 +1,10 @@
-const express = require("express");
-const logger = require("../../helpers/logger");
-const { randomIntFromInterval } = require("../../helpers/math");
-const { AuthorModel } = require("../../models/author");
-const { QuoteModel } = require("../../models/quote");
+var express = require("express");
+var logger = require("../../helpers/logger");
+var { randomIntFromInterval } = require("../../helpers/math");
+var { AuthorModel } = require("../../models/author");
+var { QuoteModel } = require("../../models/quote");
 
-const router = express.Router();
+var router = express.Router();
 
 router.get("/random-js", async (req, res) => {
   try {
