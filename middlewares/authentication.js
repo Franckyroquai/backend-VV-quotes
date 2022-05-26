@@ -1,8 +1,8 @@
-// const logger = require("../helpers/logger");
-const jwt = require("express-jwt");
+// var logger = require("../helpers/logger");
+var jwt = require("express-jwt");
 
 module.exports.jwtMiddleware = function (opts) {
-  const baseJwtConfig = {
+  var baseJwtConfig = {
     secret: process.env.JWT_SECRET,
     algorithms: ["HS256"],
   };
