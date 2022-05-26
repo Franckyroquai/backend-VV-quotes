@@ -1,6 +1,6 @@
-const { Model } = require("sequelize");
-const logger = require("./logger");
-const typeOfSync = process.env.DB_SYNC_TYPE;
+var { Model } = require("sequelize");
+var logger = require("./logger");
+var typeOfSync = process.env.DB_SYNC_TYPE;
 
 // logger.debug("db sync type:", typeOfSync);
 // logger.debug("type of TypeOfSync:", typeof typeOfSync);
