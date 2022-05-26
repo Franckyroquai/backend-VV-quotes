@@ -1,7 +1,7 @@
-const express = require("express");
-const logger = require("../../helpers/logger");
-const { UserModel } = require("../../models/user");
-const router = express.Router();
+var express = require("express");
+var logger = require("../../helpers/logger");
+var { UserModel } = require("../../models/user");
+var router = express.Router();
 
 function verifyUserInfos(userObject) {
   if (userObject && typeof userObject === "object") {
@@ -74,17 +74,13 @@ router.post("/find/email", async (req, res) => {
 });
 
 router.post("/authorization", async (req, res) => {
-  res.send("todo"); //TODO: to implement
-});
-
-router.get("/profile", async (req, res) => {
-  res.send("todo"); //TODO: to implement
+  res.send("todo"); //TODO: to implement for pepo
 });
 
 router.delete("/delete", async (req, res) => {
   try {
     if (req.body.id && typeof req.body.id === "number") {
-      const user = await UserModel.findOne({
+      var user = await UserModel.findOne({
         where: {
           id: req.body.id,
         },
@@ -92,7 +88,7 @@ router.delete("/delete", async (req, res) => {
       if (user === null) {
         res.status(404).json({ message: "user not found" });
       } else {
-        const deletedUser = await user.destroy({});
+        var deletedUser = await user.destroy({});
         res.status(200).json({ deletedUser });
       }
     } else {
@@ -107,7 +103,7 @@ router.delete("/delete", async (req, res) => {
 
 router.get("/count", async (req, res) => {
   try {
-    const userCount = await UserModel.count();
+    var userCount = await UserModel.count();
     res.status(200).json({ count: userCount });
   } catch (error) {
     logger.debug({ message: "server error" });
