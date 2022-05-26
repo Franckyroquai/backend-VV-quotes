@@ -1,14 +1,15 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../services/db-connection");
-const logger = require("../helpers/logger");
+var { DataTypes } = require("sequelize");
+var sequelize = require("../services/db-connection");
+var logger = require("../helpers/logger");
 
-const Comment = sequelize.define("comment", {
+var Comment = sequelize.define("comment", {
   text: {
     type: DataTypes.STRING,
     allowNull: false,
     required: true,
   },
   image: {
+    //TODO: remove attribute because ambiguous
     type: DataTypes.BLOB,
     allowNull: true,
     required: false,
@@ -21,6 +22,9 @@ const Comment = sequelize.define("comment", {
     type: DataTypes.DATE,
     allowNull: false,
   },
+
+  //TODO: userId Attributes with linking in db-init.js
+  //TODO: maybe an image in another table ?
 });
 
 module.exports = { CommentModel: Comment };
