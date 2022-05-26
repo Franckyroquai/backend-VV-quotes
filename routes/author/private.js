@@ -1,12 +1,11 @@
 if (process.env.NODE_ENV === "dev") {
-  //TODO:DRY
   var casual = require("casual");
 }
-const express = require("express");
-const router = express.Router();
-const logger = require("../../helpers/logger");
-const { randomIntFromInterval } = require("../../helpers/math");
-const { AuthorModel } = require("../../models/author");
+var express = require("express");
+var router = express.Router();
+var logger = require("../../helpers/logger");
+var { randomIntFromInterval } = require("../../helpers/math");
+var { AuthorModel } = require("../../models/author");
 
 router.post("/create-one", async (req, res) => {
   var author = req.body;
@@ -49,8 +48,42 @@ router.get("/all", async (req, res) => {
   }
 });
 
+function sanitizeGetOneAuthorRequest(request) {
+  if (request.body.id && typeof request.body.id === "number") {
+    return { id: request.body.id };
+  } else if (request.body.name && typeof request.body.name === "string") {
+    return { name: request.body.name };
+  } else {
+    return {
+      error: {
+        details: "to define" /*TODO: need to define details attribute*/,
+        type: "bad request",
+      },
+    };
+  }
+}
+
 router.get("/one", async (req, res) => {
-  res.send("todo"); //TODO: to implement
+  try {
+    var sanitized = sanitizeGetOneAuthorRequest(req);
+    var author;
+    if (sanitized.id) {
+      author = await AuthorModel.findOne({ where: { id: sanitized.id } });
+    } else if (sanitized.name) {
+      author = await AuthorModel.findOne({ where: { name: sanitized.name } });
+    }
+    if (sanitized.error) {
+      res.status(442).json({ ...sanitized.error, msg: "un truc" });
+    }
+    if (author === null) {
+      res.status(404).json({ message: "author not found" });
+    } else {
+      res.status(200).json(author);
+    }
+  } catch (error) {
+    // FIXME: check other kind of errors
+    res.status(500).json({ message: "server error" });
+  }
 });
 
 router.post("/update", async (req, res) => {
@@ -61,7 +94,7 @@ router.post("/delete", async (req, res) => {
   res.send("todo"); //TODO: to implement
 });
 
-router.post("/link", async (req, res) => {
+router.post("/generate", async (req, res) => {
   res.send("todo"); //TODO: to implement
 });
 
