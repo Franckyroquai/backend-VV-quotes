@@ -1,12 +1,12 @@
-const { UserModel } = require("../models/user");
-const { ContactInfoModel } = require("../models/contact-info");
-const { QuoteModel } = require("../models/quote");
-const { AuthorModel } = require("../models/author");
-const { PostModel } = require("../models/post");
-const { CategoryModel } = require("../models/category");
-const { CommentModel } = require("../models/comment");
-const { syncronize } = require("../helpers/sql");
-const logger = require("../helpers/logger");
+var { UserModel } = require("../models/user");
+var { ContactInfoModel } = require("../models/contact-info");
+var { QuoteModel } = require("../models/quote");
+var { AuthorModel } = require("../models/author");
+var { PostModel } = require("../models/post");
+var { CategoryModel } = require("../models/category");
+var { CommentModel } = require("../models/comment");
+var { syncronize } = require("../helpers/sql");
+var logger = require("../helpers/logger");
 
 UserModel.hasOne(ContactInfoModel);
 ContactInfoModel.belongsTo(UserModel);
