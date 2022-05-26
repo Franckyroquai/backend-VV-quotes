@@ -1,8 +1,17 @@
-const express = require("express");
-const router = express.Router();
-const logger = require("../../helpers/logger");
+var express = require("express");
+var router = express.Router();
+var logger = require("../../helpers/logger");
 
-const { CategoryModel } = require("../../models/category");
+var { CategoryModel } = require("../../models/category");
 
-// on met les routes
+router.get("/all", async (req, res) => {
+  try {
+    var allCategoriesArray = await CategoryModel.findAll();
+    res.status(200).json(allCategoriesArray);
+  } catch (error) {
+    logger.debug("error in get all categories");
+    res.status(500).json("server error");
+  }
+});
+
 module.exports = router;
