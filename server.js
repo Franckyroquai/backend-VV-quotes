@@ -1,31 +1,31 @@
 require("dotenv").config();
-const logger = require("./helpers/logger");
-const express = require("express");
-const bodyParser = require("body-parser"); //rajoute .body sur l'objet request
-const cors = require("cors"); //permet d'outrepasser une faille de sécurité en dev
-const errorHandler = require("./middlewares/errorHandler");
-const { jwtMiddleware } = require("./middlewares/authentication");
+var logger = require("./helpers/logger");
+var express = require("express");
+var bodyParser = require("body-parser"); //rajoute .body sur l'objet request
+var cors = require("cors"); //permet d'outrepasser une faille de sécurité en dev
+var errorHandler = require("./middlewares/errorHandler");
+var { jwtMiddleware } = require("./middlewares/authentication");
 
 require("./services/db-connection");
 require("./services/db-init");
 
-const app = express();
+var app = express();
 
-const port = process.env.PORT || 3000;
+var port = process.env.PORT || 3000;
 
-const publicAuthRoutes = require("./routes/user/public");
-const privateAuthRoutes = require("./routes/user/private");
-const publicQuoteRoutes = require("./routes/quote/public");
-const privateQuoteRoutes = require("./routes/quote/private");
-const publicAuthorRoutes = require("./routes/author/public");
-const privateAuthorRoutes = require("./routes/author/private");
-const publicPostRoutes = require("./routes/post/public");
-const privatePostRoutes = require("./routes/post/private");
-const publicCommentRoutes = require("./routes/comment/private");
-const privateCommentRoutes = require("./routes/comment/private");
-const publicCategoryRoutes = require("./routes/category/public");
-const privateCategoryRoutes = require("./routes/category/private");
-const privateContactInfoRoutes = require("./routes/contact-info/private");
+var publicAuthRoutes = require("./routes/user/public");
+var privateAuthRoutes = require("./routes/user/private");
+var publicQuoteRoutes = require("./routes/quote/public");
+var privateQuoteRoutes = require("./routes/quote/private");
+var publicAuthorRoutes = require("./routes/author/public");
+var privateAuthorRoutes = require("./routes/author/private");
+var publicPostRoutes = require("./routes/post/public");
+var privatePostRoutes = require("./routes/post/private");
+var publicCommentRoutes = require("./routes/comment/public");
+var privateCommentRoutes = require("./routes/comment/private");
+var publicCategoryRoutes = require("./routes/category/public");
+var privateCategoryRoutes = require("./routes/category/private");
+var privateContactInfoRoutes = require("./routes/contact-info/private");
 
 app.use(cors()); //app.use (express maintenant tu utilises...) => definit les middleware dans l'ordre à utiliser
 
@@ -54,3 +54,5 @@ app.listen(port, () => {
     `NodeJs Server started listening for incoming connections on port ${port}.`
   );
 });
+
+// TODO: image model ? links to user, post, comment, author ??
