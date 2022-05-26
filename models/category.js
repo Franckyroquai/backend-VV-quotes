@@ -1,9 +1,10 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../services/db-connection");
-const logger = require("../helpers/logger");
+var { DataTypes } = require("sequelize");
+var sequelize = require("../services/db-connection");
+var logger = require("../helpers/logger");
 
-const Category = sequelize.define("category", {
+var Category = sequelize.define("category", {
   CategoryName: {
+    // TODO: DRY  >> category.categoryName ????
     type: DataTypes.STRING,
     allowNull: false,
     //TODO:vérifier unique: true;
