@@ -1,12 +1,12 @@
 if (process.env.NODE_ENV === "dev") {
   var casual = require("casual");
-  const { AuthorModel } = require("../../models/author");
+  var { AuthorModel } = require("../../models/author");
 }
-const express = require("express");
-const router = express.Router();
-const logger = require("../../helpers/logger");
-const { randomIntFromInterval } = require("../../helpers/math");
-const { QuoteModel } = require("../../models/quote");
+var express = require("express");
+var router = express.Router();
+var logger = require("../../helpers/logger");
+var { randomIntFromInterval } = require("../../helpers/math");
+var { QuoteModel } = require("../../models/quote");
 
 router.post("/create-one", async (req, res) => {
   var quoteText = req.body.text;
@@ -31,8 +31,7 @@ router.post("/create-one", async (req, res) => {
 
 if (process.env.NODE_ENV === "dev") {
   router.post("/generate", async (req, res) => {
-    const quotesNumber =
-      req.body.numberOfQuotes || randomIntFromInterval(1, 10);
+    var quotesNumber = req.body.numberOfQuotes || randomIntFromInterval(1, 10);
     var authorList = await AuthorModel.findAll();
     // logger.debug(authorList);
     var authorIdList = [];
@@ -50,9 +49,8 @@ if (process.env.NODE_ENV === "dev") {
       });
     }
     try {
-      const Quotes = await QuoteModel.bulkCreate(quotesArray);
-      // logger.debug("SQL", Quotes); //TODO: remove
-      res.json({ ok: true, number: quotesNumber });
+      var Quotes = await QuoteModel.bulkCreate(quotesArray);
+      res.json({ ok: true, number: Quotes.length });
     } catch (err) {
       logger.error(err);
       res.json({ ok: false });
@@ -61,17 +59,8 @@ if (process.env.NODE_ENV === "dev") {
 }
 
 router.delete("/delete-all", async (req, res) => {
-  // var all = await SQLQuoteModel.findAll({});
-  // var arrayOfIds = [];
-  // for (var object of all) {
-  //   // logger.debug("id:", object.dataValues.id);
-  //   arrayOfIds.push(object.dataValues.id);
-  // }
-  // logger.debug(arrayOfIds);
   var numberOfDeletedItems = await QuoteModel.destroy({ where: {} });
-  // var numberOfDeletedItems = await SQLQuoteModel.sync({ force: true });
-
-  res.json({ truc: numberOfDeletedItems });
+  res.json({ deletedNumber: numberOfDeletedItems });
 });
 
 router.delete("/id", async (req, res) => {
@@ -126,10 +115,10 @@ router.post("/update", async (req, res) => {
     var sanitizedObject = sanitizeQuoteUpdateRequest(req);
     logger.debug("try to debug: ", sanitizedObject);
     if (sanitizedObject) {
-      const quoteToUpdate = await QuoteModel.findOne({
+      var quoteToUpdate = await QuoteModel.findOne({
         where: { id: req.body.id },
       });
-      const updatedQuote = await quoteToUpdate.update(sanitizedObject);
+      var updatedQuote = await quoteToUpdate.update(sanitizedObject);
       res.status(200).json({
         id: updatedQuote.id,
         text: updatedQuote.text,
@@ -140,34 +129,6 @@ router.post("/update", async (req, res) => {
       res.status(400).json({ message: "bad request" });
     }
   } catch (error) {
-    logger.debug(error);
-    res.status(500).json({ message: "server error" });
-  }
-});
-
-router.post("/link-author", async (req, res) => {
-  try {
-    const quote = await QuoteModel.findOne({ where: { id: req.body.id } });
-    const updatedQuote = await quote.update({ authorId: req.body.authorId });
-    res
-      .status(200)
-      .json({ id: updatedQuote.id, authorId: updatedQuote.authorId });
-  } catch (error) {
-    logger.debug("server error");
-    res.status(500).json({ message: "server error" });
-  }
-});
-
-router.post("/link-user", async (req, res) => {
-  try {
-    logger.info(req.body);
-    const quote = await QuoteModel.findOne({ where: { id: req.body.quoteId } });
-    const quoteWithUser = await quote.update({ userId: req.body.userId });
-    res
-      .status(200)
-      .json({ id: quoteWithUser.id, userId: quoteWithUser.userId });
-  } catch (error) {
-    logger.debug("server error");
     logger.debug(error);
     res.status(500).json({ message: "server error" });
   }
