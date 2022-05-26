@@ -1,9 +1,9 @@
-const express = require("express");
-const jwt = require("jsonwebtoken");
-const logger = require("../../helpers/logger");
-const { UserModel } = require("../../models/user");
-const router = express.Router();
-const bcrypt = require("bcrypt");
+var express = require("express");
+var jwt = require("jsonwebtoken");
+var logger = require("../../helpers/logger");
+var { UserModel } = require("../../models/user");
+var router = express.Router();
+var bcrypt = require("bcrypt");
 
 router.post("/register", async (req, res) => {
   if (req.body.password === undefined || req.body.password === "") {
@@ -63,7 +63,7 @@ router.post("/login", async (req, res) => {
       logger.debug("email and password are required");
       res.status(400).json({ message: "email and password are required" });
     }
-    const user = await UserModel.findOne({
+    var user = await UserModel.findOne({
       where: { email: userEmail },
     });
     if (!user) {
