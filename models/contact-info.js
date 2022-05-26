@@ -1,8 +1,8 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../services/db-connection");
-const logger = require("../helpers/logger");
+var { DataTypes } = require("sequelize");
+var sequelize = require("../services/db-connection");
+var logger = require("../helpers/logger");
 
-const ContactInfo = sequelize.define(
+var ContactInfo = sequelize.define(
   "contact-info",
   {
     firstName: {
