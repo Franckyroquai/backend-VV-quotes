@@ -1,10 +1,10 @@
-const { DataTypes } = require("sequelize");
-const bcrypt = require("bcrypt");
-const sequelize = require("../services/db-connection");
-const logger = require("../helpers/logger");
-const saltRounds = parseInt(process.env.SALT_ROUNDS);
+var { DataTypes } = require("sequelize");
+var bcrypt = require("bcrypt");
+var sequelize = require("../services/db-connection");
+var logger = require("../helpers/logger");
+var saltRounds = parseInt(process.env.SALT_ROUNDS);
 
-const User = sequelize.define(
+var User = sequelize.define(
   "user",
   {
     // Model attributes are defined here
@@ -28,12 +28,12 @@ const User = sequelize.define(
   {
     hooks: {
       beforeCreate: async (user) => {
-        const hash = await bcrypt.hash(user.password, saltRounds);
+        var hash = await bcrypt.hash(user.password, saltRounds);
         user.password = hash;
       },
       beforeUpdate: async (user) => {
         if (user.changed("password")) {
-          const hash = await bcrypt.hash(user.password, saltRounds);
+          var hash = await bcrypt.hash(user.password, saltRounds);
           user.password = hash;
         }
       },
