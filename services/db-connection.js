@@ -1,7 +1,7 @@
-const { Sequelize } = require("sequelize");
-const logger = require("../helpers/logger");
+var { Sequelize } = require("sequelize");
+var logger = require("../helpers/logger");
 
-const sequelize = new Sequelize("testdatavv", "root", "", {
+var sequelize = new Sequelize("testdatavv", "root", "", {
   host: "localhost",
   dialect: "mysql",
   logging: false,
