@@ -1,5 +1,5 @@
-// const express = require("express");
-const logger = require("../helpers/logger");
+// var express = require("express");
+var logger = require("../helpers/logger");
 
 function errorHandler(err, req, res, next) {
   if (err) {
