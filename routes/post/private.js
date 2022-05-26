@@ -1,15 +1,19 @@
-const casual = require("casual");
-const express = require("express");
-const router = express.Router();
-const logger = require("../../helpers/logger");
+const { getRandIdFromModel } = require("../../helpers/dev");
+var casual = require("casual");
+var express = require("express");
+var router = express.Router();
+var logger = require("../../helpers/logger");
+var { randomIntFromInterval } = require("../../helpers/math");
+var { CategoryModel } = require("../../models/category");
 
-const { PostModel } = require("../../models/post");
+var { PostModel } = require("../../models/post");
+var { UserModel } = require("../../models/user");
 
 function sanitizeCreatePostRequest(request) {
   var sanitizedObject = {};
   var requestBody = request.body;
   var userId = request.user.id; //id depuis le jwt grâce au middleware
-  if (!requestBody) {
+  if (Object.keys(requestBody).length === 0) {
     return false;
   }
   if (
@@ -61,7 +65,6 @@ function sanitizeCreatePostRequest(request) {
     numberOfViews: 0,
     userId: userId,
   });
-  // logger.debug("sanitized create post object", sanitizedObject);
   return sanitizedObject;
 }
 
@@ -70,11 +73,8 @@ function sanitizeUpdatePostRequest(request) {
   var requestBody = request.body;
   var error = { type: "bad request" };
 
-  if (
-    Object.keys(requestBody).length === 0 &&
-    requestBody.constructor === Object
-  ) {
-    return { error: { details: "Empty", ...error } };
+  if (Object.keys(requestBody).length === 0) {
+    return { error: { details: "Empty", ...error } }; //spread operator
   }
   if (!requestBody.id) {
     Object.assign(error, { entity: "id", details: "not present" });
@@ -156,7 +156,7 @@ router.post("/create-one", async (req, res) => {
   try {
     var sanitizedPostObject = sanitizeCreatePostRequest(req);
     if (!sanitizedPostObject.error) {
-      const newPost = await PostModel.create(sanitizedPostObject);
+      var newPost = await PostModel.create(sanitizedPostObject);
       res.status(200).json(newPost);
     } else {
       res.status(400).json({ message: "bad request" });
@@ -178,10 +178,10 @@ router.post("/update-one", async (req, res) => {
   try {
     var sanitized = sanitizeUpdatePostRequest(req);
     if (!sanitized.error) {
-      const PostToUpdate = await PostModel.findOne({
+      var PostToUpdate = await PostModel.findOne({
         where: { id: req.body.id },
       });
-      const updatedPost = await PostToUpdate.update(sanitized);
+      var updatedPost = await PostToUpdate.update(sanitized);
       res.status(200).json(updatedPost);
     } else {
       var msg;
@@ -205,7 +205,7 @@ router.post("/update-one", async (req, res) => {
   }
 });
 
-router.post("/delete-one", async (req, res) => {
+router.delete("/delete", async (req, res) => {
   try {
     var idToDestroy = req.body.id;
     var postToDestroy = await PostModel.findOne({ where: { id: idToDestroy } });
@@ -218,61 +218,35 @@ router.post("/delete-one", async (req, res) => {
       res.status(200).json({ id: destroyedPost.id, destroyed: true });
     }
   } catch (error) {
-    logger.debug("server error");
-    logger.error(error);
-    res.status(500).json({ message: "server error" });
-  }
-});
-
-router.post("/link-category", async (req, res) => {
-  try {
-    const post = await PostModel.findOne({ where: { id: req.body.id } });
-    const updatedPost = await post.update({ categoryId: req.body.categoryId });
-    res
-      .status(200)
-      .json({ id: updatedPost.id, categoryId: updatedPost.categoryId });
-  } catch (error) {
-    logger.debug("server error");
-    res.status(500).json({ message: "server error" });
-  }
-});
-
-router.post("/link-user", async (req, res) => {
-  try {
-    logger.info(req.body);
-    const post = await PostModel.findOne({ where: { id: req.body.postId } });
-    const postWithUser = await post.update({ userId: req.body.userId });
-    res.status(200).json({ id: postWithUser.id, userId: postWithUser.userId });
-  } catch (error) {
-    logger.debug("server error");
-    logger.debug(error);
     res.status(500).json({ message: "server error" });
   }
 });
 
 router.post("/validate", async (req, res) => {
-  res.send("todo"); //TODO: to implement
+  res.send("todo"); //TODO: to implement for pepo
 });
 
 router.post("/generate", async (req, res) => {
+  var generationQty = req.body.number || 5;
   var postsArray = [];
-  var generationQty = req.body.number || 10;
-
-  for (var idx = 0; idx < generationQty; idx++) {
-    postsArray.push({
-      content: casual.sentence,
-      title: casual.title,
-      subtitle: casual.title,
-      link: casual.url,
-      numberOfViews: casual.building_number,
-      numberOfLikes: casual.building_number,
-      categoryId: 55,
-      userId: 42,
-    });
-  }
   try {
-    const posts = await PostModel.bulkCreate(postsArray);
-    res.status(200).json({ ok: true, number: generationQty });
+    for (var idx = 0; idx < generationQty; idx++) {
+      var userId = await getRandIdFromModel(UserModel);
+      var categoryId = await getRandIdFromModel(CategoryModel);
+      postsArray.push({
+        content: casual.sentence,
+        title: casual.title,
+        subtitle: casual.title,
+        link: casual.url,
+        numberOfViews: casual.building_number,
+        numberOfLikes: casual.building_number,
+        categoryId,
+        userId,
+      });
+    }
+    var posts = await PostModel.bulkCreate(postsArray);
+    logger.info("posts >>", posts.length, "<<");
+    res.status(200).json({ ok: true, number: posts.length });
   } catch (err) {
     logger.error(err);
     res.json({ ok: false });
