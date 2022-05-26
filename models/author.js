@@ -1,11 +1,11 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../services/db-connection");
-const logger = require("../helpers/logger");
+var { DataTypes } = require("sequelize");
+var sequelize = require("../services/db-connection");
+var logger = require("../helpers/logger");
 
-const Author = sequelize.define("author", {
+var Author = sequelize.define("author", {
   name: {
     type: DataTypes.STRING(8000),
-    allowNull: false, //TODO: vérifier
+    allowNull: false,
     //TODO:vérifier unique: true;
   },
   wikilink: {
