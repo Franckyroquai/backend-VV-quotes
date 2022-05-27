@@ -22,7 +22,7 @@ var Comment = sequelize.define("comment", {
     type: DataTypes.DATE,
     allowNull: false,
   },
-
+  //FIXME: pepo implement first.
   //TODO: userId Attributes with linking in db-init.js
   //TODO: maybe an image in another table ?
 });
