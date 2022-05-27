@@ -5,7 +5,9 @@ var express = require("express");
 var router = express.Router();
 var logger = require("../../helpers/logger");
 var { randomIntFromInterval } = require("../../helpers/math");
+const author = require("../../models/author");
 var { AuthorModel } = require("../../models/author");
+const { QuoteModel } = require("../../models/quote");
 
 router.post("/create-one", async (req, res) => {
   var author = req.body;
@@ -45,6 +47,7 @@ router.get("/all", async (req, res) => {
     res.status(200).json({ authorList });
   } catch (err) {
     //faire gestion erreur
+    res.status(500).json({ message: "unknown server error" });
   }
 });
 
@@ -86,16 +89,126 @@ router.get("/one", async (req, res) => {
   }
 });
 
+function sanitizeUpdateAuthorRequest(request) {
+  var sanitizedObject = {};
+  var requestBody = request.body;
+  var error = { type: "bad request" };
+
+  if (Object.keys(requestBody).length === 0) {
+    return { error: { details: "Empty", ...error } }; //spread operator
+  }
+  if (!requestBody.id) {
+    Object.assign(error, { entity: "id", details: "not present" });
+  } else if (!(typeof requestBody.id === "number")) {
+    Object.assign(error, { entity: "id", details: "not a number" });
+  } else {
+    Object.assign(sanitizedObject, { id: requestBody.id });
+  }
+  if (requestBody.name) {
+    if (typeof requestBody.name != "string") {
+      Object.assign(error, { entity: "content", details: "not a string" });
+    } else {
+      Object.assign(sanitizedObject, { name: requestBody.name });
+    }
+  }
+  if (requestBody.wikilink) {
+    if (!(typeof requestBody.wikilink === "string")) {
+      Object.assign(error, { entity: "wikilink", details: "not a string" });
+    } else if (
+      !requestBody.wikilink.match(
+        /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm
+      )
+    ) {
+      Object.assign(error, {
+        entity: "wikilink",
+        details: "not a web URL",
+      });
+    } else {
+      Object.assign(sanitizedObject, {
+        wikilink: requestBody.wikilink,
+      });
+    }
+  }
+  if (Object.keys(sanitizedObject).length < 2) {
+    Object.assign(error, { details: "not enough keys in" });
+  }
+  logger.debug(Object.keys(sanitizedObject));
+  if (Object.keys(error).length > 1) {
+    Object.assign(sanitizedObject, { error });
+  }
+  return sanitizedObject;
+}
+
 router.post("/update", async (req, res) => {
-  res.send("todo"); //TODO: to implement
+  try {
+    var sanitized = sanitizeUpdateAuthorRequest(req);
+    if (!sanitized.error) {
+      var AuthorToUpdate = await AuthorModel.findOne({
+        where: { id: req.body.id },
+      });
+      var updatedAuthor = await AuthorToUpdate.update(sanitized);
+      res.status(200).json(updatedAuthor);
+    } else {
+      var msg;
+      if (sanitized.error.entity) {
+        msg = `${sanitized.error.entity} is ${sanitized.error.details}`;
+      } else {
+        msg = `${sanitized.error.details} request body`;
+      }
+      res.status(400).json({ ...sanitized.error, msg });
+    }
+  } catch (error) {
+    // FIXME: check other kind of errors
+    logger.debug(error);
+    res.status(500).json({ message: "server error" });
+  }
 });
 
-router.post("/delete", async (req, res) => {
-  res.send("todo"); //TODO: to implement
+router.delete("/delete", async (req, res) => {
+  try {
+    var idToDestroy = req.body.id;
+    var authorToDestroy = await AuthorModel.findOne({
+      where: { id: idToDestroy },
+    });
+    if (!authorToDestroy) {
+      res
+        .status(404)
+        .json({ message: "author to destroy not found", id: idToDestroy });
+    } else {
+      var destroyedAuthor = await authorToDestroy.destroy();
+      res.status(200).json({ id: destroyedAuthor.id, destroyed: true });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "server error" });
+  }
 });
 
 router.post("/generate", async (req, res) => {
-  res.send("todo"); //TODO: to implement
+  var authorNumber = req.body.numberOfAuthors || randomIntFromInterval(1, 10);
+  let authorArray = [];
+  try {
+    for (var idx = 0; idx < authorNumber; idx++) {
+      authorArray.push({
+        name: casual.name,
+        wikilink: casual.url,
+      });
+    }
+    var authors = await AuthorModel.bulkCreate(authorArray);
+    res.status(200).json({ ok: true, numberCreated: authors.length });
+  } catch (err) {
+    res.json({ ok: false });
+  }
+});
+
+router.get("/from-quote", async (req, res) => {
+  var quoteId = req.body.quoteId;
+  try {
+    var quote = await QuoteModel.findOne({ where: { id: quoteId } });
+    var author = await quote.getAuthor();
+    res.status(200).json(author);
+  } catch (error) {
+    res.status(500).json("debug");
+  }
 });
 
 module.exports = router;
