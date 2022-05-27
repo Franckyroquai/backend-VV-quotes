@@ -44,7 +44,7 @@ app.use("/comment", publicCommentRoutes);
 app.use("/comment", jwtMiddleware(), privateCommentRoutes);
 app.use("/category", publicCategoryRoutes);
 app.use("/category", jwtMiddleware(), privateCategoryRoutes);
-app.use("./contact-info", jwtMiddleware(), privateContactInfoRoutes);
+app.use("/contact-info", jwtMiddleware(), privateContactInfoRoutes);
 
 // Handle errors.
 app.use(errorHandler);
