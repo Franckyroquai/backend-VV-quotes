@@ -2,6 +2,8 @@ var express = require("express");
 var jwt = require("jsonwebtoken");
 var logger = require("../../helpers/logger");
 var { UserModel } = require("../../models/user");
+var { CommentModel } = require("../../models/comment");
+var { PostModel } = require("../../models/post");
 var router = express.Router();
 var bcrypt = require("bcrypt");
 
@@ -89,12 +91,29 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/user-from-post", async (req, res) => {
-  res.send("todo"); //TODO: to implement
+//FIXME: refactor routes auth/public user (pepo)
+
+router.get("/from-post", async (req, res) => {
+  logger.info("bobby");
+  var postId = req.body.postId;
+  try {
+    var comment = await PostModel.findOne({ where: { id: postId } });
+    var user = await comment.getUser();
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json("debug");
+  }
 });
 
-router.get("/user-from-comment", async (req, res) => {
-  res.send("todo"); //TODO: to implement
+router.get("/from-comment", async (req, res) => {
+  var commentId = req.body.commentId;
+  try {
+    var comment = await CommentModel.findOne({ where: { id: commentId } });
+    var user = await comment.getUser();
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json("debug");
+  }
 });
 
 module.exports = router;
