@@ -1,8 +1,8 @@
 var { DataTypes } = require("sequelize");
-var sequelize = require("../services/db-connection");
+var { sequelizeInstance } = require("../services/db-connection");
 var logger = require("../helpers/logger");
 
-var Comment = sequelize.define("comment", {
+var Comment = sequelizeInstance.define("comment", {
   text: {
     type: DataTypes.STRING,
     allowNull: false,

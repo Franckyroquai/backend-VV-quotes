@@ -1,0 +1,27 @@
+{
+  "dev":{
+    "user": {
+      "generate": [],
+      "flush": [],
+      "regenerate": []
+    },
+    "author": {
+      "generate": ["lambda", "omega", "bibou"],
+      "mock-one": ["omega"]
+    }
+  },
+  "user": {
+    "create": [],
+    "count": ["lambda"],
+    "delete": [],
+    "get-by-email": [],
+    "get-by-id": [],
+    "update-authorization": [],
+    "update": ["lambda"]
+  },
+  "author": {
+    "all" : ["lambda"],
+    "create" : [],
+    "delete": []
+  }
+}

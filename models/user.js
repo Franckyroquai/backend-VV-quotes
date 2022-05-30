@@ -1,28 +1,25 @@
 var { DataTypes } = require("sequelize");
 var bcrypt = require("bcrypt");
-var sequelize = require("../services/db-connection");
-var logger = require("../helpers/logger");
+var { sequelizeInstance } = require("../services/db-connection");
 var saltRounds = parseInt(process.env.SALT_ROUNDS);
 
-var User = sequelize.define(
+var User = sequelizeInstance.define(
   "user",
   {
-    // Model attributes are defined here
     email: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(255),
       allowNull: false,
       unique: true,
     },
     password: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(80),
       allowNull: false,
-      // allowNull defaults to true
     },
-    //TODO:insérer le champ "type"
     type: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT("tiny"), //TODO: ENUM pepo
       allowNull: false,
-      // allowNull defaults to true
+      isIn: [["admin", "lambda", "omega"]],
+      // defaultValue: "lambda",
     },
   },
   {

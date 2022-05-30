@@ -1,9 +1,6 @@
-var express = require("express");
-var router = express.Router();
-var logger = require("../../helpers/logger");
-
-var { CommentModel } = require("../../models/comment");
-const { PostModel } = require("../../models/post");
+var router = require("express").Router();
+var logger = require("../../../helpers/logger");
+var { CommentModel } = require("../../../models/comment");
 
 function sanitizeCommentRequest(request) {
   var sanitizedObject = {};
@@ -54,29 +51,7 @@ function sanitizeCommentRequest(request) {
   return sanitizedObject;
 }
 
-router.post("/create", async (req, res) => {
-  try {
-    var sanitizedCommentObject = sanitizeCommentRequest(req);
-    if (!sanitizedCommentObject.error) {
-      var newComment = await CommentModel.create(sanitizedCommentObject);
-      res.status(200).json(newComment);
-    } else {
-      res.status(400).json({ message: "bad request" });
-    }
-  } catch (error) {
-    if (error.name === "SequelizeForeignKeyConstraintError") {
-      var message = `SQL Constraint Error parameter ${error.fields[0]} with value ${error.value} doesn't exists`;
-      res.status(442).json({
-        message,
-        type: "Model Relation Constraint Error",
-      });
-    } else {
-      res.status(500).json({ message: "server error" });
-    }
-  }
-});
-
-router.post("/update", async (req, res) => {
+module.exports = router.post("/update", async (req, res) => {
   try {
     var sanitized = sanitizeCommentRequest(req);
     if (!sanitized.error) {
@@ -95,39 +70,7 @@ router.post("/update", async (req, res) => {
       res.status(400).json({ ...sanitized.error, msg });
     }
   } catch (error) {
-    if (error.name === "SequelizeForeignKeyConstraintError") {
-      var message = `SQL Constraint Error parameter ${error.fields[0]} with value ${error.value} doesn't exists`;
-      res.status(442).json({
-        message,
-        type: "Model Relation Constraint Error",
-      });
-    } else {
-      res.status(500).json({ message: "server error" });
-    }
+    logger.error("uncaught error", error); //FIXME: error handling
+    res.status(500).json({ message: "internal server error" });
   }
 });
-
-router.delete("/delete", async (req, res) => {
-  try {
-    var idToDestroy = req.body.id;
-    var commentToDestroy = await CommentModel.findOne({
-      where: { id: idToDestroy },
-    });
-    if (!commentToDestroy) {
-      res
-        .status(404)
-        .json({ message: "comment to destroy not found", id: idToDestroy });
-    } else {
-      var destroyedComment = await commentToDestroy.destroy();
-      res.status(200).json({ id: destroyedComment.id, destroyed: true });
-    }
-  } catch (error) {
-    res.status(500).json({ message: "server error" });
-  }
-});
-
-router.post("/validate", async (req, res) => {
-  res.send("todo"); //TODO: to implement for pepo
-});
-
-module.exports = router;

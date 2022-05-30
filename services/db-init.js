@@ -5,6 +5,7 @@ var { AuthorModel } = require("../models/author");
 var { PostModel } = require("../models/post");
 var { CategoryModel } = require("../models/category");
 var { CommentModel } = require("../models/comment");
+var { ImageModel } = require("../models/image");
 var { syncronize } = require("../helpers/sql");
 var logger = require("../helpers/logger");
 
@@ -26,15 +27,22 @@ PostModel.belongsTo(CategoryModel);
 PostModel.hasMany(CommentModel);
 CommentModel.belongsTo(PostModel);
 
+UserModel.hasMany(CommentModel);
+CommentModel.belongsTo(UserModel);
+
+// UserModel.hasMany(ImageModel);
+// ImageModel.belongsTo(UserModel);
+
 async function groupSync() {
   try {
-    await syncronize(UserModel, "user");
-    await syncronize(ContactInfoModel, "contact-info");
-    await syncronize(AuthorModel, "author");
-    await syncronize(QuoteModel, "quote");
-    await syncronize(CategoryModel, "category");
-    await syncronize(PostModel, "post");
-    await syncronize(CommentModel, "comment");
+    await syncronize(UserModel);
+    await syncronize(ContactInfoModel);
+    await syncronize(AuthorModel);
+    await syncronize(QuoteModel);
+    await syncronize(CategoryModel);
+    await syncronize(PostModel);
+    await syncronize(CommentModel);
+    await syncronize(ImageModel);
   } catch (err) {
     logger.error(err);
   }

@@ -1,8 +1,8 @@
 var { DataTypes } = require("sequelize");
-var sequelize = require("../services/db-connection");
+var { sequelizeInstance } = require("../services/db-connection");
 var logger = require("../helpers/logger");
 
-var Author = sequelize.define("author", {
+var Author = sequelizeInstance.define("author", {
   name: {
     type: DataTypes.STRING(8000),
     allowNull: false,

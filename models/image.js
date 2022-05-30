@@ -1,8 +1,8 @@
 var { DataTypes } = require("sequelize");
-var sequelize = require("../services/db-connection");
+var { sequelizeInstance } = require("../services/db-connection");
 var logger = require("../helpers/logger");
 
-var Image = sequelize.define("image", {
+var Image = sequelizeInstance.define("image", {
   payload: {
     type: DataTypes.BLOB,
     allowNull: false,

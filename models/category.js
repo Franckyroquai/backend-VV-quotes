@@ -1,8 +1,8 @@
 var { DataTypes } = require("sequelize");
-var sequelize = require("../services/db-connection");
+var { sequelizeInstance } = require("../services/db-connection");
 var logger = require("../helpers/logger");
 
-var Category = sequelize.define("category", {
+var Category = sequelizeInstance.define("category", {
   CategoryName: {
     // TODO: DRY  >> category.categoryName ????
     type: DataTypes.STRING,

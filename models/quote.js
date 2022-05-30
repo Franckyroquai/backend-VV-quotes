@@ -1,16 +1,28 @@
 var { DataTypes } = require("sequelize");
-var sequelize = require("../services/db-connection");
-var logger = require("../helpers/logger");
+var { sequelizeInstance } = require("../services/db-connection");
 
-var Quote = sequelize.define("quote", {
-  // Model attributes are defined here
-  text: {
-    type: DataTypes.STRING(8000),
-    allowNull: false,
-    //TODO:vérifier unique: true;
+var Quote = sequelizeInstance.define(
+  "quote",
+  {
+    text: {
+      type: DataTypes.STRING(512),
+      allowNull: false,
+      unique: true,
+    },
+    authorId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    modifiedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    modifiedBy: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
   },
-
-  //TODO:insérer le champ "timestamps"
-});
+  { timestamps: true }
+);
 
 module.exports = { QuoteModel: Quote };

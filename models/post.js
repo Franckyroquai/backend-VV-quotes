@@ -1,8 +1,8 @@
 var { DataTypes } = require("sequelize");
-var sequelize = require("../services/db-connection");
+var { sequelizeInstance } = require("../services/db-connection");
 var logger = require("../helpers/logger");
 
-var Post = sequelize.define(
+var Post = sequelizeInstance.define(
   "post",
   {
     // Model attributes are defined here
