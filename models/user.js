@@ -1,6 +1,7 @@
 var { DataTypes } = require("sequelize");
 var bcrypt = require("bcrypt");
-var { sequelizeInstance } = require("../services/db-connection");
+var sequelizeInstance =
+  require("../services/db-connection").getSequelizeInstance();
 var saltRounds = parseInt(process.env.SALT_ROUNDS);
 
 var User = sequelizeInstance.define(
