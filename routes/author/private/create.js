@@ -2,7 +2,7 @@ var router = require("express").Router();
 var logger = require("../../../helpers/logger");
 var { AuthorModel } = require("../../../models/author");
 
-module.exports = router.post("/create-one", async (req, res) => {
+module.exports = router.post("/", async (req, res) => {
   var author = req.body;
   try {
     if (!author.name || author.name === "") {
