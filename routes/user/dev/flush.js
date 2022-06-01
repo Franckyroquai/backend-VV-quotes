@@ -4,7 +4,7 @@ var { UserModel } = require("../../../models/user");
 
 var casual = require("casual");
 
-module.exports = router.delete("/", async (req, res) => {
+module.exports = router.delete("/flush", async (req, res) => {
   try {
     var result = await UserModel.destroy({ where: {} });
     res.status(200).json({ deleted: result });
