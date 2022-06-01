@@ -1,5 +1,6 @@
 var { DataTypes } = require("sequelize");
-var { sequelizeInstance } = require("../services/db-connection");
+var sequelizeInstance =
+  require("../services/db-connection").getSequelizeInstance();
 
 var Quote = sequelizeInstance.define(
   "quote",
