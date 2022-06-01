@@ -1,20 +1,24 @@
+console.log(`
+
+`);
 require("dotenv").config();
 var logger = require("./helpers/logger");
 var express = require("express");
-var bodyParser = require("body-parser"); //rajoute .body sur l'objet request
-var cors = require("cors"); //permet d'outrepasser une faille de sécurité en dev
+var bodyParser = require("body-parser");
+var cors = require("cors");
 var { ErrorHandler } = require("./middlewares/index");
-var CustomRouter = require("./routes/index");
+var CustomRouter = require("./routes/CustomRouterConstruction");
 
-require("./services/db-connection");
-require("./services/db-init");
+var BaseDb = require("./services/db-connection");
+BaseDb.initDbConnection();
+// require("./services/db-init");
 
 var app = express();
 
 var port = process.env.PORT || 3000;
 
-app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cors()); //permet d'outrepasser une faille de sécurité en dev
+app.use(bodyParser.urlencoded({ extended: false })); //rajoute .body sur l'objet request
 app.use(express.json());
 
 CustomRouter(app);
