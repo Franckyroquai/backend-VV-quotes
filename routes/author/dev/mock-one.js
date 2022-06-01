@@ -3,7 +3,7 @@ var logger = require("../../../helpers/logger");
 var { AuthorModel } = require("../../../models/author");
 var casual = require("casual");
 
-module.exports = router.post("/mock-one", async (req, res) => {
+module.exports = router.post("/", async (req, res) => {
   try {
     var author = await AuthorModel.create({
       name: casual.name,
