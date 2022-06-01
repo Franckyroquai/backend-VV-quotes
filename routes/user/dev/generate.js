@@ -4,7 +4,7 @@ var { UserModel } = require("../../../models/user");
 
 var casual = require("casual");
 
-module.exports = router.post("/", async (req, res) => {
+module.exports = router.post("/generate", async (req, res) => {
   try {
     var generationQty = req.body.number || 1;
     var userType = req.body.type || "lambda";
