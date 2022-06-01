@@ -1,17 +1,20 @@
 var { Sequelize } = require("sequelize");
 var logger = require("../helpers/logger");
 
-var envv = process.env;
+var sequelizeInstance = new Sequelize(
+  process.env.DBNAME,
+  process.env.DBUSER,
+  process.env.DBPASS,
+  {
+    host: process.env.DBHOST,
+    port: parseInt(process.env.DBPORT, 10),
+    dialect: "mysql",
+    logging: false,
+    showWarnings: false,
+  }
+);
 
-var sequelizeInstance = new Sequelize(envv.DBNAME, envv.DBUSER, envv.DBPASS, {
-  host: envv.DBHOST,
-  port: parseInt(envv.DBPORT, 10),
-  dialect: "mysql",
-  logging: false,
-  showWarnings: false,
-});
-
-async function testConnection() {
+async function connection() {
   try {
     await sequelizeInstance.authenticate();
     logger.info("Mysql database connection has been established successfully.");
@@ -20,6 +23,8 @@ async function testConnection() {
   }
 }
 
-testConnection();
+function getSequelizeInstance() {
+  return sequelizeInstance;
+}
 
-module.exports = { sequelizeInstance };
+module.exports = { getSequelizeInstance, initDbConnection: connection };
