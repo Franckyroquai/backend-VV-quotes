@@ -1,10 +1,11 @@
 var router = require("express").Router();
 var logger = require("../../../helpers/logger");
-var { sequelizeInstance } = require("../../../services/db-connection");
+var sequelizeInstance =
+  require("../../../services/db-connection").getSequelizeInstance();
 var Sequelize = require("sequelize");
 var { UserModel } = require("../../../models/user");
 
-module.exports = router.post("/", async (req, res) => {
+module.exports = router.post("/regenerate", async (req, res) => {
   try {
     var result = await sequelizeInstance.query("SELECT * FROM `regenerate`", {
       type: Sequelize.QueryTypes.SELECT,
@@ -36,10 +37,10 @@ module.exports = router.post("/", async (req, res) => {
           type: "admin",
         });
       }
-      // result.forEach((element) => {
-      //   Object.assign(element, { type: "admin" });
-      // });
-      // logger.debug("regenerate users array", result);
+      result.forEach((element) => {
+        Object.assign(element, { type: "admin" });
+      });
+      logger.debug("regenerate users array", result);
       var users = await UserModel.bulkCreate(result, {
         individualHooks: true,
       });
