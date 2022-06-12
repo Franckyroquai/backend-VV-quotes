@@ -2,7 +2,7 @@ var router = require("express").Router();
 var logger = require("../../../helpers/logger");
 var { CommentModel } = require("../../../models/comment");
 
-module.exports = router.get("/all", async (req, res) => {
+module.exports = router.get("/", async (req, res) => {
   try {
     var allCommentsArray = await CommentModel.findAll();
     res.status(200).json(allCommentsArray);

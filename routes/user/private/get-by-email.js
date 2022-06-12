@@ -2,7 +2,7 @@ var router = require("express").Router();
 var logger = require("../../../helpers/logger");
 var { UserModel } = require("../../../models/user");
 
-module.exports = router.get("/email", async (req, res) => {
+module.exports = router.get("/", async (req, res) => {
   try {
     var user = await UserModel.findOne({ where: { id: req.body.id } });
     res.status(200).json(user);

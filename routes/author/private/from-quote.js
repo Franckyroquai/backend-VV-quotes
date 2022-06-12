@@ -2,7 +2,7 @@ var router = require("express").Router();
 var logger = require("../../../helpers/logger");
 var { QuoteModel } = require("../../../models/quote");
 
-module.exports = router.post("/from-quote", async (req, res) => {
+module.exports = router.post("/", async (req, res) => {
   try {
     var quote = await QuoteModel.findOne({ where: { id: req.body.quoteId } });
     var author = await quote.getAuthor();

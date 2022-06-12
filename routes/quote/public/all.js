@@ -3,7 +3,7 @@ var logger = require("../../../helpers/logger");
 var { QuoteModel } = require("../../../models/quote");
 var { AuthorModel } = require("../../../models/author");
 
-module.exports = router.get("/all", async (req, res) => {
+module.exports = router.get("/", async (req, res) => {
   try {
     var allQuotes = await QuoteModel.findAll({ include: AuthorModel });
     var newArray = [];

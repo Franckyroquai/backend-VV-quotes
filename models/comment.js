@@ -5,15 +5,9 @@ var logger = require("../helpers/logger");
 
 var Comment = sequelizeInstance.define("comment", {
   text: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: false,
     required: true,
-  },
-  image: {
-    //TODO: remove attribute because ambiguous
-    type: DataTypes.BLOB,
-    allowNull: true,
-    required: false,
   },
   createdAt: {
     type: DataTypes.DATE,

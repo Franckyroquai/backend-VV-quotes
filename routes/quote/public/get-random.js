@@ -3,7 +3,7 @@ var logger = require("../../../helpers/logger");
 var { randomIntFromInterval } = require("../../../helpers/math");
 var { QuoteModel } = require("../../../models/quote");
 
-module.exports = router.get("/random-js", async (req, res) => {
+module.exports = router.get("/", async (req, res) => {
   try {
     var allQuotesArray = await QuoteModel.findAll({});
 

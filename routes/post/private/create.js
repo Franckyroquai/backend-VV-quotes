@@ -62,7 +62,7 @@ function sanitizeCreatePostRequest(request) {
   return sanitizedObject;
 }
 
-module.exports = router.post("/create", async (req, res) => {
+module.exports = router.post("/", async (req, res) => {
   try {
     var sanitizedPostObject = sanitizeCreatePostRequest(req);
     if (!sanitizedPostObject.error) {

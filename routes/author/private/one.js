@@ -17,7 +17,7 @@ function sanitizeGetOneAuthorRequest(request) {
   }
 }
 
-module.exports = router.post("/one", async (req, res) => {
+module.exports = router.post("/", async (req, res) => {
   try {
     var sanitized = sanitizeGetOneAuthorRequest(req);
     var author;

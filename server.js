@@ -8,10 +8,11 @@ var bodyParser = require("body-parser");
 var cors = require("cors");
 var { ErrorHandler } = require("./middlewares/index");
 var CustomRouter = require("./routes/CustomRouterConstruction");
+var expressListEndpoints = require("express-list-endpoints");
 
 var BaseDb = require("./services/db-connection");
 BaseDb.initDbConnection();
-// require("./services/db-init");
+require("./services/models-relations");
 
 var app = express();
 
@@ -30,6 +31,7 @@ app.listen(port, () => {
   logger.info(
     `NodeJs Server started listening for incoming connections on port ${port}.`
   );
+  // logger.debug(expressListEndpoints(app));
 });
 
 // TODO: image model ? links to user, post, comment, author ??

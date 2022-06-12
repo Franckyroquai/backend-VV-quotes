@@ -2,7 +2,7 @@ var router = require("express").Router();
 var logger = require("../../../helpers/logger");
 var { QuoteModel } = require("../../../models/quote");
 
-module.exports = router.get("/count", async (req, res) => {
+module.exports = router.get("/", async (req, res) => {
   try {
     var quoteArray = await QuoteModel.findAll();
     res.json({ count: quoteArray.length });

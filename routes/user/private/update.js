@@ -11,7 +11,7 @@ function verifyUserInfos(userObject) {
   return false;
 }
 
-module.exports = router.post("/update", async (req, res) => {
+module.exports = router.post("/", async (req, res) => {
   try {
     if (verifyUserInfos(req.body) && req.body.id) {
       var user = await UserModel.findOne({

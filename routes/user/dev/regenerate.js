@@ -5,25 +5,39 @@ var sequelizeInstance =
 var Sequelize = require("sequelize");
 var { UserModel } = require("../../../models/user");
 
-module.exports = router.post("/regenerate", async (req, res) => {
+module.exports = router.post("/", async (req, res) => {
   try {
-    var result = await sequelizeInstance.query("SELECT * FROM `regenerate`", {
-      type: Sequelize.QueryTypes.SELECT,
-    });
-    // logger.debug(result);
-    var alreadyregisteredUsers = await UserModel.findAll({
-      where: { email: [result[0].email, result[1].email] },
-    });
-    // logger.debug("from db user", alreadyregisteredUsers);
-    if (alreadyregisteredUsers.length) {
-      res
-        .status(400)
-        .json({ message: "at least one user is already Present in db" });
-    } else {
+    let fallback = false;
+    let users;
+    try {
+      var result = await sequelizeInstance.query("SELECT * FROM `regenerate`", {
+        type: Sequelize.QueryTypes.SELECT,
+      });
+      var alreadyregisteredUsers = await UserModel.findAll({
+        where: { email: [result[0].email, result[1].email] },
+      });
+      if (alreadyregisteredUsers.length) {
+        res
+          .status(400)
+          .json({ message: "at least one user is already Present in db" });
+      } else {
+        result.forEach((element) => {
+          Object.assign(element, { type: "admin" });
+        });
+        logger.debug("regenerate users array", result);
+        users = await UserModel.bulkCreate(result, {
+          individualHooks: true,
+        });
+      }
+    } catch (e) {
+      logger.debug("regenerate from db not compatible went to fallback by env");
+      fallback = true;
+    }
+    if (fallback) {
       var defaultPasswords = false;
       const userMails = process.env.USER_MAILS.split(",");
       const userPasswords = process.env.REGENERATE_PASSWORDS.split(",");
-      // logger.debug("data to regenerate", { userMails, userPasswords });
+      logger.debug("data to regenerate", { userMails, userPasswords });
       if (userMails.length != userPasswords.length) {
         defaultPasswords = true;
       }
@@ -37,18 +51,13 @@ module.exports = router.post("/regenerate", async (req, res) => {
           type: "admin",
         });
       }
-      result.forEach((element) => {
-        Object.assign(element, { type: "admin" });
-      });
-      logger.debug("regenerate users array", result);
-      var users = await UserModel.bulkCreate(result, {
+      users = await UserModel.bulkCreate(userArray, {
         individualHooks: true,
       });
-      var usersEmail = [];
-      users.forEach((user) => usersEmail.push(user.email));
-      // logger.debug({userMails});
-      res.status(200).json({ ok: true, users: usersEmail });
     }
+    var usersEmail = [];
+    users.forEach((user) => usersEmail.push(user.email));
+    res.status(200).json({ ok: true, users: usersEmail });
   } catch (error) {
     logger.error("uncaught error", error); //FIXME: error handling
     res.status(500).json({ message: "internal server error" });

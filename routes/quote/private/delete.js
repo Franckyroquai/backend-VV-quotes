@@ -3,7 +3,7 @@ var logger = require("../../../helpers/logger");
 
 var { QuoteModel } = require("../../../models/quote");
 
-module.exports = router.delete("/id", async (req, res) => {
+module.exports = router.delete("/", async (req, res) => {
   try {
     var quoteToDelete = await QuoteModel.findOne({
       where: { id: req.body.id },

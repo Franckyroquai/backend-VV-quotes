@@ -17,7 +17,7 @@ function sanitizeCommentRequest(request) {
   } else {
     Object.assign(sanitizedObject, { id: requestBody.id });
   }
-  if (!requestBody.text || !(requestBody.text.lenght > 1)) {
+  if (!requestBody.text || !(requestBody.text.length > 1)) {
     Object.assign(error, { entity: "text", details: "text is empty" });
   } else if (!(typeof requestBody.text === "string")) {
     Object.assign(error, { entity: "text", details: "not a string" });
@@ -51,7 +51,7 @@ function sanitizeCommentRequest(request) {
   return sanitizedObject;
 }
 
-module.exports = router.post("/create", async (req, res) => {
+module.exports = router.post("/", async (req, res) => {
   try {
     var sanitizedCommentObject = sanitizeCommentRequest(req);
     if (!sanitizedCommentObject.error) {

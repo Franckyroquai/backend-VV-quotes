@@ -3,7 +3,7 @@ var logger = require("../../../helpers/logger");
 
 var { QuoteModel } = require("../../../models/quote");
 
-module.exports = router.post("/create-one", async (req, res) => {
+module.exports = router.post("/", async (req, res) => {
   try {
     var quoteText = req.body.text;
     var quoteAuthorId = req.body.authorId;

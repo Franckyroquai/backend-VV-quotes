@@ -4,7 +4,7 @@ var router = require("express").Router();
 
 var { CommentModel } = require("../../../models/comment");
 
-module.exports = router.get("/from-comment", async (req, res) => {
+module.exports = router.get("/", async (req, res) => {
   var commentId = req.body.commentId;
   try {
     var comment = await CommentModel.findOne({ where: { id: commentId } });

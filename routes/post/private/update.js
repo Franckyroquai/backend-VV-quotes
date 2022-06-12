@@ -87,7 +87,7 @@ function sanitizeUpdatePostRequest(request) {
   return sanitizedObject;
 }
 
-module.exports = router.verb("/URL", async (req, res) => {
+module.exports = router.post("/", async (req, res) => {
   try {
     var sanitized = sanitizeUpdatePostRequest(req);
     if (!sanitized.error) {

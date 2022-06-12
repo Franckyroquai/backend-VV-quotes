@@ -6,8 +6,9 @@ var { randomIntFromInterval } = require("../../../helpers/math");
 var { AuthorModel } = require("../../../models/author");
 var { QuoteModel } = require("../../../models/quote");
 
-module.exports = router.post("/generate", async (req, res) => {
-  var quotesNumber = req.body.numberOfQuotes || randomIntFromInterval(1, 10);
+module.exports = router.post("/", async (req, res) => {
+  logger.debug("body number", req.body.number);
+  var quotesNumber = req.body.number || randomIntFromInterval(1, 10);
   var authorList = await AuthorModel.findAll();
   var authorIdList = [];
   for (var idx = 0; idx < authorList.length; idx++) {
@@ -24,7 +25,7 @@ module.exports = router.post("/generate", async (req, res) => {
   }
   try {
     var Quotes = await QuoteModel.bulkCreate(quotesArray);
-    res.json({ ok: true, number: Quotes.length });
+    res.json({ entity: "quote", generated: true, number: Quotes.length });
   } catch (err) {
     logger.error(err);
     res.json({ ok: false });

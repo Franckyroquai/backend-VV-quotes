@@ -2,7 +2,7 @@ var router = require("express").Router();
 var logger = require("../../../helpers/logger");
 var { PostModel } = require("../../../models/post");
 
-module.exports = router.post("/validate", async (req, res) => {
+module.exports = router.post("/", async (req, res) => {
   try {
     res.send("todo"); //TODO: to implement for pepo
   } catch (error) {

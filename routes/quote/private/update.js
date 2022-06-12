@@ -38,7 +38,7 @@ function sanitizeQuoteUpdateRequest(request) {
   return sanitizedObject;
 }
 
-module.exports = router.post("/update", async (req, res) => {
+module.exports = router.post("/", async (req, res) => {
   try {
     var sanitizedObject = sanitizeQuoteUpdateRequest(req);
     logger.debug("try to debug: ", sanitizedObject);

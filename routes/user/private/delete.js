@@ -2,7 +2,7 @@ var router = require("express").Router();
 var logger = require("../../../helpers/logger");
 var { UserModel } = require("../../../models/user");
 
-module.exports = router.delete("/delete", async (req, res) => {
+module.exports = router.delete("/", async (req, res) => {
   try {
     if (req.body.id && typeof req.body.id === "number") {
       var user = await UserModel.findOne({

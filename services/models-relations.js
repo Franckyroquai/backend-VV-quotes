@@ -6,7 +6,9 @@ var { PostModel } = require("../models/post");
 var { CategoryModel } = require("../models/category");
 var { CommentModel } = require("../models/comment");
 var { ImageModel } = require("../models/image");
+var { TagModel } = require("../models/tag");
 var { syncronize } = require("../helpers/sql");
+var { getSequelizeInstance } = require("./db-connection");
 var logger = require("../helpers/logger");
 
 UserModel.hasOne(ContactInfoModel);
@@ -33,16 +35,20 @@ CommentModel.belongsTo(UserModel);
 // UserModel.hasMany(ImageModel);
 // ImageModel.belongsTo(UserModel);
 
+PostModel.belongsToMany(TagModel, {
+  through: "post_tag",
+  as: "tags",
+  foreignKey: "post_id",
+});
+TagModel.belongsToMany(PostModel, {
+  through: "post_tag",
+  as: "posts",
+  foreignKey: "tag_id",
+});
+
 async function groupSync() {
   try {
-    await syncronize(UserModel);
-    await syncronize(ContactInfoModel);
-    await syncronize(AuthorModel);
-    await syncronize(QuoteModel);
-    await syncronize(CategoryModel);
-    await syncronize(PostModel);
-    await syncronize(CommentModel);
-    await syncronize(ImageModel);
+    syncronize(getSequelizeInstance());
   } catch (err) {
     logger.error(err);
   }

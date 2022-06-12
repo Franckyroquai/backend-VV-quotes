@@ -18,5 +18,20 @@
         "titleBar.inactiveBackground": "#1f0fa899",
         "titleBar.inactiveForeground": "#e7e7e799"
     },
-    "peacock.color": "#1f0fa8"
+    "peacock.color": "#1f0fa8",
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "db-mysql-ams3-08906-do-user-11772687-0.b.db.ondigitalocean.com",
+            "port": 25060,
+            "driver": "MySQL",
+            "name": "Francky",
+            "database": "pepodb",
+            "username": "doadmin",
+            "password": "AVNS_nQAez3CXSRQG1GZSUBx"
+        }
+    ]
 }

@@ -2,7 +2,7 @@ var router = require("express").Router();
 var logger = require("../../../helpers/logger");
 var { CommentModel } = require("../../../models/comment");
 
-module.exports = router.post("/validate", async (req, res) => {
+module.exports = router.post("/", async (req, res) => {
   try {
     //
   } catch (error) {

@@ -2,7 +2,7 @@ var router = require("express").Router();
 var logger = require("../../../helpers/logger");
 var { PostModel } = require("../../../models/post");
 
-module.exports = router.delete("/delete", async (req, res) => {
+module.exports = router.delete("/", async (req, res) => {
   try {
     var idToDestroy = req.body.id;
     var postToDestroy = await PostModel.findOne({ where: { id: idToDestroy } });

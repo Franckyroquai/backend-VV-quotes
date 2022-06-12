@@ -53,7 +53,7 @@ function sanitizeUpdateAuthorRequest(request) {
   return sanitizedObject;
 }
 
-module.exports = router.post("/update", async (req, res) => {
+module.exports = router.post("/", async (req, res) => {
   try {
     var sanitized = sanitizeUpdateAuthorRequest(req);
     if (!sanitized.error) {

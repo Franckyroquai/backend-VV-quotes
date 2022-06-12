@@ -8,7 +8,7 @@ function checkRole(role) {
   return true; //TODO: pepo to implement with env
 }
 
-module.exports = router.post("/authorization", async (req, res) => {
+module.exports = router.post("/", async (req, res) => {
   try {
     var id = parseInt(req.body.id);
     var newRole = req.body.role;

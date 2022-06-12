@@ -2,7 +2,7 @@ var router = require("express").Router();
 var logger = require("../../../helpers/logger");
 var { CommentModel } = require("../../../models/comment");
 
-module.exports = router.delete("/delete", async (req, res) => {
+module.exports = router.delete("/", async (req, res) => {
   try {
     var idToDestroy = req.body.id;
     var commentToDestroy = await CommentModel.findOne({
