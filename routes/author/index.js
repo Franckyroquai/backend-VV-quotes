@@ -4,9 +4,11 @@ const { Authentication, Authorization } = require("../../middlewares/index");
 const logger = require("../../helpers/logger");
 
 if (process.env.NODE_ENV === "dev") {
+  const flush = require("./dev/flush");
   const generate = require("./dev/generate");
   const mockOne = require("./dev/mock-one");
 
+  devRouter.use("/flush", [Authentication(), Authorization], flush);
   devRouter.use("/generate", [Authentication(), Authorization], generate);
   devRouter.use("/mock-one", [Authentication(), Authorization], mockOne);
 }

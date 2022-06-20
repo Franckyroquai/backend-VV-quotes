@@ -9,6 +9,7 @@ var Tag = sequelizeInstance.define(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     isVisible: {
       type: DataTypes.BOOLEAN,

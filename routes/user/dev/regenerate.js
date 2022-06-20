@@ -29,7 +29,7 @@ module.exports = router.post("/", async (req, res) => {
           individualHooks: true,
         });
       }
-    } catch (e) {
+    } catch (error) {
       logger.debug("regenerate from db not compatible went to fallback by env");
       fallback = true;
     }
@@ -57,7 +57,7 @@ module.exports = router.post("/", async (req, res) => {
     }
     var usersEmail = [];
     users.forEach((user) => usersEmail.push(user.email));
-    res.status(200).json({ ok: true, users: usersEmail });
+    res.status(200).json({ regenerated: true, users: usersEmail });
   } catch (error) {
     logger.error("uncaught error", error); //FIXME: error handling
     res.status(500).json({ message: "internal server error" });

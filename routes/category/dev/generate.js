@@ -15,7 +15,9 @@ module.exports = router.post("/generate", async (req, res) => {
     }
     var category = await CategoryModel.bulkCreate(categoryArray);
     logger.info("category >>", category.length, "<<");
-    res.status(200).json({ ok: true, number: category.length });
+    res
+      .status(200)
+      .json({ entity: "category", generated: true, number: category.length });
   } catch (error) {
     logger.error("uncaught error", error); //FIXME: error handling
     res.status(500).json({ message: "internal server error" });

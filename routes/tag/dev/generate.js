@@ -23,7 +23,9 @@ module.exports = router.post("/", async (req, res) => {
     var tags = await TagModel.bulkCreate(tagArray, {
       individualHooks: true,
     });
-    res.status(200).json({ ok: true, number: tags.length });
+    res
+      .status(200)
+      .json({ entity: "tag", generated: true, number: tags.length });
   } catch (error) {
     logger.error("uncaught error", error); //FIXME: error handling
     res.status(500).json({ message: "internal server error" });

@@ -5,35 +5,39 @@ const logger = require("../../helpers/logger");
 
 if (process.env.NODE_ENV === "dev") {
   const generate = require("./dev/generate");
+  const generateAssoc = require("./dev/generateAssoc");
   const flush = require("./dev/flush");
+  const flushAssoc = require("./dev/flushAssoc");
 
   devRouter.use("/generate", [Authentication(), Authorization], generate);
+  devRouter.use(
+    "/generate-assoc",
+    [Authentication(), Authorization],
+    generateAssoc
+  );
   devRouter.use("/flush", [Authentication(), Authorization], flush);
+  devRouter.use("/flush-assoc", [Authentication(), Authorization], flushAssoc);
 }
 
 //Publics
-// const userGetFromComment = require("./public/get-from-comment");
-// const userLogin = require("./public/login");
-// const userRegister = require("./public/register");
-
-// router.use("/from-comments", userGetFromComment);
-// router.use("/login", userLogin);
-// router.use("/register", userRegister);
 
 //Privates
 const getAll = require("./private/all");
 const tagCreate = require("./private/create");
-// const userDelete = require("./private/delete");
-// const userGetByEmail = require("./private/get-by-email");
-// const userGetById = require("./private/get-by-id");
-// const userUpdate = require("./private/update");
-// const userUpdateAuthorization = require("./private/update-authorization");
+const tagAssociate = require("./private/associate");
+const tagDissociate = require("./private/dissociate");
+const getAssoc = require("./private/associatedPosts");
+const tagDelete = require("./private/delete");
+const tagUpdate = require("./private/update");
+const tagValidate = require("./private/validate");
 
-// router.use("/all", [Authentication(), Authorization], getAll);
+router.use("/all", [Authentication(), Authorization], getAll);
 router.use("/create", [Authentication(), Authorization], tagCreate);
-// router.use("/delete", [Authentication(), Authorization], userDelete);
-// router.use("/email", [Authentication(), Authorization], userGetByEmail);
-// router.use("/id", [Authentication(), Authorization], userGetById);
-// router.use("/update", [Authentication(), Authorization], userUpdate);
+router.use("/associate", [Authentication(), Authorization], tagAssociate);
+router.use("/dissociate", [Authentication(), Authorization], tagDissociate);
+router.use("/associated", [Authentication(), Authorization], getAssoc);
+router.use("/delete", [Authentication(), Authorization], tagDelete);
+router.use("/update", [Authentication(), Authorization], tagUpdate);
+router.use("/validate", [Authentication(), Authorization], tagValidate);
 
 module.exports = { tagRouter: router, tagDevRouter: devRouter };

@@ -1,27 +1,78 @@
 {
   "dev":{
+
+    "author": {
+      "generate": ["lambda", "omega", "bibou"],
+      "mock-one": ["omega"]
+    },
+    "category":{},
+    "comment":{},
+    "contact-info": {},
+    "post": {},
+    "quote": {},
+    "tag":{},
     "user": {
       "generate": [],
       "flush": [],
       "regenerate": []
-    },
-    "author": {
-      "generate": ["lambda", "omega", "bibou"],
-      "mock-one": ["omega"]
     }
+  },
+
+  "author": {
+    "all" : [],
+    "create" : [],
+    "delete": []
+  },
+  "category": {
+    "all": [],
+    "count": [],
+    "create": [],
+    "delete": [],
+    "update": [],
+    "validate":[]
+  },
+  "comment":{
+    "all": [],
+    "create": [],
+    "count": [],
+    "delete": [],
+    "update": []
+  },
+  "contact-info": {
+    "all": [],
+    "create": [],
+    "count": [],
+    "delete": [],
+    "update": []
+  },
+  "post": {
+    "all": [],
+    "count": [],
+    "create": [],
+    "delete": [],
+    "update": []
+  },
+  "quote": {
+    "all": [],
+    "create": [],
+    "count": [],
+    "delete": [],
+    "update": []
+  },
+  "tag": {
+    "all": [],
+    "create": [],
+    "count": [],
+    "delete": [],
+    "update": []
   },
   "user": {
     "create": [],
-    "count": ["lambda"],
+    "count": [],
     "delete": [],
     "get-by-email": [],
     "get-by-id": [],
     "update-authorization": [],
-    "update": ["lambda"]
-  },
-  "author": {
-    "all" : ["lambda"],
-    "create" : [],
-    "delete": []
+    "update": []
   }
 }

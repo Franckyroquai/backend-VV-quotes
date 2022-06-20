@@ -5,7 +5,9 @@ var { TagModel } = require("../../../models/tag");
 function sanitizeTagRequest(request) {
   var sanitizedObject = {};
   var requestBody = request.body;
-  var isAdmin = request.user.role;
+  logger.warn("--rbod---", requestBody);
+  var isAdmin = request.user.type === "admin";
+  logger.warn("isadmin", isAdmin);
   logger.debug("request user for tag creation:", request.user);
   var error = { type: "bad request" };
 
@@ -23,7 +25,11 @@ function sanitizeTagRequest(request) {
   if (requestBody.isVisible && isAdmin) {
     Object.assign(sanitizedObject, { isVisible: true });
   }
-  Object.assign(sanitizedObject, { createdBy: request.user.id });
+  Object.assign(sanitizedObject, {
+    name: requestBody.name,
+    createdBy: request.user.id,
+  });
+  logger.debug(sanitizedObject);
   return sanitizedObject;
 }
 

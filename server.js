@@ -18,7 +18,8 @@ var app = express();
 
 var port = process.env.PORT || 3000;
 
-app.use(cors()); //permet d'outrepasser une faille de sécurité en dev
+app.use(cors());
+
 app.use(bodyParser.urlencoded({ extended: false })); //rajoute .body sur l'objet request
 app.use(express.json());
 

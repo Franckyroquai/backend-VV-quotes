@@ -1,3 +1,8 @@
+var { syncronize } = require("../helpers/sql");
+var { getSequelizeInstance } = require("./db-connection");
+var logger = require("../helpers/logger");
+
+//Models
 var { UserModel } = require("../models/user");
 var { ContactInfoModel } = require("../models/contact-info");
 var { QuoteModel } = require("../models/quote");
@@ -5,11 +10,7 @@ var { AuthorModel } = require("../models/author");
 var { PostModel } = require("../models/post");
 var { CategoryModel } = require("../models/category");
 var { CommentModel } = require("../models/comment");
-var { ImageModel } = require("../models/image");
 var { TagModel } = require("../models/tag");
-var { syncronize } = require("../helpers/sql");
-var { getSequelizeInstance } = require("./db-connection");
-var logger = require("../helpers/logger");
 
 UserModel.hasOne(ContactInfoModel);
 ContactInfoModel.belongsTo(UserModel);
@@ -26,24 +27,27 @@ QuoteModel.belongsTo(AuthorModel);
 CategoryModel.hasMany(PostModel);
 PostModel.belongsTo(CategoryModel);
 
-PostModel.hasMany(CommentModel);
+PostModel.hasMany(CommentModel, {
+  foreignKey: { allowNull: false },
+  onDelete: "CASCADE",
+});
 CommentModel.belongsTo(PostModel);
 
-UserModel.hasMany(CommentModel);
+UserModel.hasMany(CommentModel, {
+  foreignKey: { allowNull: false },
+  onDelete: "CASCADE",
+});
 CommentModel.belongsTo(UserModel);
-
-// UserModel.hasMany(ImageModel);
-// ImageModel.belongsTo(UserModel);
 
 PostModel.belongsToMany(TagModel, {
   through: "post_tag",
   as: "tags",
-  foreignKey: "post_id",
+  foreignKey: "postId",
 });
 TagModel.belongsToMany(PostModel, {
   through: "post_tag",
   as: "posts",
-  foreignKey: "tag_id",
+  foreignKey: "tagId",
 });
 
 async function groupSync() {
