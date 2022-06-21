@@ -36,7 +36,9 @@ var Tag = sequelizeInstance.define(
     },
   },
   {
-    // Other model options go here
+    timestamps: true,
+    comment: "Posts tags",
+    underscored: true,
   }
 );
 

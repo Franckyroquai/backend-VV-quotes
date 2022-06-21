@@ -17,13 +17,15 @@ var User = sequelizeInstance.define(
       allowNull: false,
     },
     type: {
-      type: DataTypes.TEXT("tiny"), //TODO: ENUM pepo
+      type: DataTypes.ENUM(["admin", "lambda", "omega"]), //TODO: ENUM pepo
       allowNull: false,
-      isIn: [["admin", "lambda", "omega"]],
-      // defaultValue: "lambda",
+      defaultValue: "lambda",
     },
   },
   {
+    timestamps: true,
+    comment: "User of the APP",
+    underscored: true,
     hooks: {
       beforeCreate: async (user) => {
         var hash = await bcrypt.hash(user.password, saltRounds);

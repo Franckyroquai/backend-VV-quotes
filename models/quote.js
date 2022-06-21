@@ -6,24 +6,28 @@ var Quote = sequelizeInstance.define(
   "quote",
   {
     text: {
-      type: DataTypes.STRING(512),
+      type: DataTypes.STRING,
       allowNull: false,
       unique: true,
     },
-    authorId: {
+    updatedBy: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    modifiedAt: {
-      type: DataTypes.DATE,
+    locutor: {
+      type: DataTypes.STRING,
       allowNull: true,
     },
-    modifiedBy: {
-      type: DataTypes.INTEGER,
+    locutorLink: {
+      type: DataTypes.STRING,
       allowNull: true,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    comment: "quotes",
+    underscored: true,
+  }
 );
 
 module.exports = { QuoteModel: Quote };

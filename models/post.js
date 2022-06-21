@@ -6,11 +6,9 @@ var logger = require("../helpers/logger");
 var Post = sequelizeInstance.define(
   "post",
   {
-    // Model attributes are defined here
     content: {
-      type: DataTypes.STRING(8000),
+      type: DataTypes.TEXT,
       allowNull: false,
-      //TODO:vérifier unique: true;
     },
     title: {
       type: DataTypes.STRING,
@@ -25,16 +23,13 @@ var Post = sequelizeInstance.define(
       allowNull: true,
     },
     numberOfViews: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.BIGINT, //TODO: move to it's own entity
       allowNull: false,
-      // allowNull defaults to true
     },
     numberOfLikes: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.BIGINT, //TODO: move to it's own entity
       allowNull: false,
-      // allowNull defaults to true
     },
-
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -43,9 +38,14 @@ var Post = sequelizeInstance.define(
       type: DataTypes.DATE,
       allowNull: false,
     },
+    updatedBy: {
+      type: DataTypes.INTEGER,
+    },
   },
   {
-    // Other model options go here
+    timestamps: true,
+    comment: "Blog Posts",
+    underscored: true,
   }
 );
 

@@ -11,7 +11,6 @@ async function syncronize(sequelizeInstance) {
         logger.warn("type of sync : alter");
         return await sequelizeInstance.sync({ alter: true });
       } else if (typeOfSync === "none") {
-        // logger.warn("type of sync : none");
         return await sequelizeInstance.sync();
       }
     }

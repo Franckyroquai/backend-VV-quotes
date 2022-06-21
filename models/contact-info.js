@@ -7,25 +7,26 @@ var ContactInfo = sequelizeInstance.define(
   "contact-info",
   {
     firstName: {
-      type: DataTypes.STRING(8000),
-      allowNull: false,
-      //TODO:vérifier unique: true;
+      type: DataTypes.STRING,
     },
     lastName: {
       type: DataTypes.STRING,
       allowNull: false,
-      // allowNull defaults to true
     },
     phoneNumber: {
       type: DataTypes.STRING,
-      allowNull: false,
-      // allowNull defaults to true
     },
-
-    //TODO:insérer le champ "timestamps"
+    address: {
+      type: DataTypes.STRING,
+    },
+    postalCode: {
+      type: DataTypes.STRING,
+    },
   },
   {
-    // Other model options go here
+    timestamps: true,
+    comment: "Complementary infos about a user",
+    underscored: true,
   }
 );
 
