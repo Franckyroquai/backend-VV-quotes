@@ -1,6 +1,3 @@
-console.log(`
-
-`);
 require("dotenv").config();
 var logger = require("./helpers/logger");
 var express = require("express");
@@ -22,17 +19,12 @@ app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false })); //rajoute .body sur l'objet request
 app.use(express.json());
-
 CustomRouter(app);
-
-// Handle errors.
 app.use(ErrorHandler);
 
 app.listen(port, () => {
   logger.info(
     `NodeJs Server started listening for incoming connections on port ${port}.`
   );
-  // logger.debug(expressListEndpoints(app));
+  // logger.debug(expressListEndpoints(app)); //remove package when router is finished
 });
-
-// TODO: image model ? links to user, post, comment, author ??
