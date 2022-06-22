@@ -2,7 +2,7 @@ var router = require("express").Router();
 var logger = require("../../../helpers/logger");
 var { CategoryModel } = require("../../../models/category");
 
-module.exports = router.get("/all", async (req, res) => {
+module.exports = router.get("/", async (req, res) => {
   try {
     var allCategoriesArray = await CategoryModel.findAll();
     res.status(200).json(allCategoriesArray);
