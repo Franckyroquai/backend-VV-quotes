@@ -4,13 +4,13 @@ var { CategoryModel } = require("../../../models/category");
 
 var casual = require("casual");
 
-module.exports = router.post("/generate", async (req, res) => {
+module.exports = router.post("/", async (req, res) => {
   try {
     var generationQty = req.body.number || 5;
     var categoryArray = [];
     for (var idx = 0; idx < generationQty; idx++) {
       categoryArray.push({
-        CategoryName: casual.name,
+        name: casual.name,
       });
     }
     var category = await CategoryModel.bulkCreate(categoryArray);
