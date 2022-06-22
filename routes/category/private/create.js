@@ -5,32 +5,41 @@ var { CategoryModel } = require("../../../models/category");
 function sanitizedCreateCategoryObject(request) {
   var sanitizedObject = {};
   var requestBody = request.body;
+  var error = { type: "bad request" };
   if (Object.keys(requestBody).length === 0) {
-    return false;
+    return { error: { details: "Empty", ...error } }; //spread operator
   }
-  if (
-    !requestBody.CategoryName ||
-    !(typeof requestBody.CategoryName === "string") ||
-    !(requestBody.CategoryName.length >= 1)
-  ) {
-    return false;
+  if (!requestBody.name) {
+    Object.assign(error, { entity: "name", details: "not present" });
+  } else if (!(typeof requestBody.name === "string")) {
+    Object.assign(error, { entity: "name", details: "not a string" });
+  } else {
+    Object.assign(sanitizedObject, { name: requestBody.name });
   }
-  Object.assign(sanitizedObject, { CategoryName: requestBody.CategoryName });
-
+  if (Object.keys(error).length > 1) {
+    Object.assign(sanitizedObject, { error });
+  }
   return sanitizedObject;
 }
 
-module.exports = router.post("/create", async (req, res) => {
+module.exports = router.post("/", async (req, res) => {
   try {
-    var sanitizedCategoryObject = sanitizedCreateCategoryObject(req);
-    if (!sanitizedCategoryObject.error) {
-      var newCategory = await CategoryModel.create(sanitizedCategoryObject);
+    var sanitized = sanitizedCreateCategoryObject(req);
+    logger.debug(sanitized);
+    if (!sanitized.error) {
+      var newCategory = await CategoryModel.create(sanitized);
       res.status(200).json(newCategory);
     } else {
-      res.status(500).json({ message: "bad request" });
+      var msg;
+      if (sanitized.error.entity) {
+        msg = `${sanitized.error.entity} is ${sanitized.error.details}`;
+      } else {
+        msg = `${sanitized.error.details} request body`;
+      }
+      res.status(400).json({ ...sanitized.error, msg });
     }
-  } catch (error) {
-    logger.error("uncaught error", error); //FIXME: error handling
+  } catch (err) {
+    logger.error("uncaught catch error", err); //FIXME: error handling
     res.status(500).json({ message: "internal server error" });
   }
 });
