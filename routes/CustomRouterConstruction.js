@@ -5,6 +5,7 @@ const { postRouter, postDevRouter } = require("./post/index");
 const { commentRouter, commentDevRouter } = require("./comment/index");
 const { authorRouter, authorDevRouter } = require("./author/index");
 const { tagRouter, tagDevRouter } = require("./tag/index");
+const { categoryRouter, categoryDevRouter } = require("./category/index");
 
 const {
   contactInfoRouter,
@@ -22,6 +23,7 @@ module.exports = function (app) {
     router.use("/dev/comment", commentDevRouter);
     router.use("/dev/author", authorDevRouter);
     router.use("/dev/tag", tagDevRouter);
+    router.use("/dev/category", categoryDevRouter);
   }
 
   router.use("/user", userRouter);
@@ -31,5 +33,6 @@ module.exports = function (app) {
   router.use("/comment", commentRouter);
   router.use("/author", authorRouter);
   router.use("/tag", tagRouter);
+  router.use("/category", categoryRouter);
   app.use(router);
 };
