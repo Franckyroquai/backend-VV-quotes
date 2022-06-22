@@ -26,5 +26,5 @@ app.listen(port, () => {
   logger.info(
     `NodeJs Server started listening for incoming connections on port ${port}.`
   );
-  // logger.debug(expressListEndpoints(app)); //remove package when router is finished
+  logger.debug(expressListEndpoints(app)); //remove package when router is finished
 });
