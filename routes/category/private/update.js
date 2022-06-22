@@ -20,7 +20,7 @@ function sanitizedCreateCategoryObject(request) {
   return sanitizedObject;
 }
 
-module.exports = router.post("/update", async (req, res) => {
+module.exports = router.post("/", async (req, res) => {
   try {
     var sanitized = sanitizedCreateCategoryObject(req);
     var CategoryToUpdate = await CategoryModel.findOne({
