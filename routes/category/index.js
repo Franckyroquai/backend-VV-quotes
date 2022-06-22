@@ -5,8 +5,10 @@ const logger = require("../../helpers/logger");
 
 if (process.env.NODE_ENV === "dev") {
   const generate = require("./dev/generate");
+  const flush = require("./dev/flush");
 
   devRouter.use("/generate", [Authentication(), Authorization], generate);
+  devRouter.use("/flush", [Authentication(), Authorization], flush);
 }
 
 //Publics
