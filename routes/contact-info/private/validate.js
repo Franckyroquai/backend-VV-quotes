@@ -4,7 +4,7 @@ var { ContactInfoModel } = require("../../../models/contact-info");
 
 module.exports = router.post("/", async (req, res) => {
   try {
-    res.send("todo"); //TODO: to implement for pepo
+    res.send("todo"); //TODO: to implement
   } catch (error) {
     logger.error("uncaught error", error); //FIXME: error handling
     res.status(500).json({ message: "internal server error" });
