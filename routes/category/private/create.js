@@ -7,7 +7,7 @@ function sanitizedCreateCategoryObject(request) {
   var requestBody = request.body;
   var error = { type: "bad request" };
   if (Object.keys(requestBody).length === 0) {
-    return { error: { details: "Empty", ...error } }; //spread operator
+    return { error: { details: "Empty", ...error } };
   }
   if (!requestBody.name) {
     Object.assign(error, { entity: "name", details: "not present" });
