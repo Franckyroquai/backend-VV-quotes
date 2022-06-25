@@ -4,7 +4,7 @@ var { UserModel } = require("../../../models/user");
 
 module.exports = router.get("/", async (req, res) => {
   try {
-    var user = await UserModel.findOne({ where: { id: req.body.id } });
+    var user = await UserModel.findOne({ where: { email: req.body.email } });
     res.status(200).json(user);
   } catch (error) {
     logger.error("uncaught error", error); //FIXME: error handling
