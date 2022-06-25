@@ -9,13 +9,13 @@ function sanitizedCreateCategoryObject(request) {
     return false;
   }
   if (
-    !requestBody.CategoryName ||
-    !(typeof requestBody.CategoryName === "string") ||
-    !(requestBody.CategoryName.length >= 1)
+    !requestBody.Name ||
+    !(typeof requestBody.Name === "string") ||
+    !(requestBody.Name.length >= 1)
   ) {
     return false;
   }
-  Object.assign(sanitizedObject, { CategoryName: requestBody.CategoryName });
+  Object.assign(sanitizedObject, { CategoryName: requestBody.Name });
 
   return sanitizedObject;
 }
