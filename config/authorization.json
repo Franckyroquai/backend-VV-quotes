@@ -73,6 +73,6 @@
     "get-by-email": [],
     "get-by-id": [],
     "update-authorization": [],
-    "update": []
+    "update": ["lambda", "omega"]
   }
 }
