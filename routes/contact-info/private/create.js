@@ -5,8 +5,7 @@ var { ContactInfoModel } = require("../../../models/contact-info");
 function sanitizeCreateContactInfoRequest(request) {
   var sanitizedObject = {};
   var requestBody = request.body;
-  var userId = request.body.id; //undefined; // TODO : logique a implementer pepo
-  //logique au cas ou c'est undefined;
+  var userId = request.body.id;
   var error = { type: "bad request" };
 
   if (Object.keys(requestBody).length === 0) {
