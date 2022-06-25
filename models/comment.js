@@ -21,6 +21,14 @@ var Comment = sequelizeInstance.define(
     updatedBy: {
       type: DataTypes.INTEGER,
     },
+    isVisible: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    isValid: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
     timestamps: true,
