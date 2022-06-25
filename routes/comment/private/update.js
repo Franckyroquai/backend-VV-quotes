@@ -46,7 +46,6 @@ function sanitizeCommentRequest(request) {
       Object.assign(sanitizedObject, { userId: requestBody.userId });
     }
   }
-  //TODO: userid
   Object.assign(sanitizedObject, { text: requestBody.text });
   return sanitizedObject;
 }
