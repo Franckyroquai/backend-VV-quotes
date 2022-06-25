@@ -17,7 +17,7 @@ var User = sequelizeInstance.define(
       allowNull: false,
     },
     type: {
-      type: DataTypes.ENUM(["admin", "lambda", "omega"]), //TODO: ENUM pepo
+      type: DataTypes.ENUM(["admin", "lambda", "omega"]),
       allowNull: false,
       defaultValue: "lambda",
     },
