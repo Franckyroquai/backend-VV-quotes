@@ -6,7 +6,12 @@ var { randomIntFromInterval } = require("../../../helpers/math");
 
 module.exports = router.post("/", async (req, res) => {
   try {
-    var authorNumber = req.body.numberOfAuthors || randomIntFromInterval(1, 10);
+    logger.warn("bidu --------------------- warn");
+
+    logger.info(req.body);
+
+    logger.warn("bidu --------------------- warn");
+    var authorNumber = req.body.number || randomIntFromInterval(1, 10);
     let authorArray = [];
     for (var idx = 0; idx < authorNumber; idx++) {
       authorArray.push({
