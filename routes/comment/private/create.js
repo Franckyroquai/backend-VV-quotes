@@ -10,13 +10,13 @@ function sanitizeCommentRequest(request) {
   if (Object.keys(requestBody).length === 0) {
     return { error: { details: "Empty", ...error } };
   }
-  if (!requestBody.id) {
-    Object.assign(error, { entity: "id", details: "not present" });
-  } else if (!(typeof requestBody.id === "number")) {
-    Object.assign(error, { entity: "id", details: "not a number" });
-  } else {
-    Object.assign(sanitizedObject, { id: requestBody.id });
-  }
+  // if (!requestBody.id) {
+  //   Object.assign(error, { entity: "id", details: "not present" });
+  // } else if (!(typeof requestBody.id === "number")) {
+  //   Object.assign(error, { entity: "id", details: "not a number" });
+  // } else {
+  //   Object.assign(sanitizedObject, { id: requestBody.id });
+  // }
   if (!requestBody.text || !(requestBody.text.length > 1)) {
     Object.assign(error, { entity: "text", details: "text is empty" });
   } else if (!(typeof requestBody.text === "string")) {
@@ -46,7 +46,6 @@ function sanitizeCommentRequest(request) {
       Object.assign(sanitizedObject, { userId: requestBody.userId });
     }
   }
-  //TODO: userid
   Object.assign(sanitizedObject, { text: requestBody.text });
   return sanitizedObject;
 }
