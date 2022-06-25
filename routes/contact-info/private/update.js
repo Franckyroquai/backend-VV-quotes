@@ -32,7 +32,6 @@ function sanitizeUpdateContactInfoRequestObject(request) {
     }
   }
   if (requestBody.phoneNumber) {
-    //TODO: remplacer string par number quand le modèle contact info aura été changé
     if (typeof requestBody.phoneNumber != "string") {
       Object.assign(error, { entity: "content", details: "not a string" });
     } else {
