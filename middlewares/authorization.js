@@ -2,8 +2,6 @@ var logger = require("../helpers/logger");
 const routeConfigs = require("../config/authorization.json");
 
 module.exports = function (req, res, next) {
-  logger.warn(req.user);
-  logger.warn(req.user.type);
   if (req.user.type === "admin") {
     logger.debug("bypassing authorization middleware");
     next();
@@ -17,13 +15,13 @@ module.exports = function (req, res, next) {
         } else {
           value = value[`${splitUrl[i]}`];
         }
-        if (value.find((elem) => elem === req.user.type)) {
-          logger.debug("authorization Middleware passed");
-          next();
-        } else {
-          logger.debug("authorization Middleware blocked");
-          res.status(403).json({ message: "forbidden" });
-        }
+      }
+      if (value.find((elem) => elem === req.user.type)) {
+        logger.debug("authorization Middleware passed");
+        next();
+      } else {
+        logger.debug("authorization Middleware blocked");
+        res.status(403).json({ message: "forbidden" });
       }
     }
   }
