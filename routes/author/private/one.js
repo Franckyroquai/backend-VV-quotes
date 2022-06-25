@@ -10,14 +10,14 @@ function sanitizeGetOneAuthorRequest(request) {
   } else {
     return {
       error: {
-        details: "to define" /*TODO: need to define details attribute*/,
+        details: "to define",
         type: "bad request",
       },
     };
   }
 }
 
-module.exports = router.post("/", async (req, res) => {
+module.exports = router.get("/", async (req, res) => {
   try {
     var sanitized = sanitizeGetOneAuthorRequest(req);
     var author;
