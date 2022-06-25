@@ -8,7 +8,7 @@ function sanitizeUpdatePostRequest(request) {
   var error = { type: "bad request" };
 
   if (Object.keys(requestBody).length === 0) {
-    return { error: { details: "Empty", ...error } }; //spread operator
+    return { error: { details: "Empty", ...error } };
   }
   if (!requestBody.id) {
     Object.assign(error, { entity: "id", details: "not present" });
