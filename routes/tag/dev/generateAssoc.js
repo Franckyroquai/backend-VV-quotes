@@ -8,6 +8,7 @@ var casual = require("casual");
 
 module.exports = router.post("/", async (req, res) => {
   try {
+    logger.info("---- here ----");
     var generationQty = req.body.assocByTag || 1;
     var selectedTag;
     if (req.body.tagId && typeof req.body.tagId === "number") {
@@ -39,7 +40,7 @@ module.exports = router.post("/", async (req, res) => {
       });
     }
     var posts = await PostModel.findAll({});
-    logger.debug("posts number", posts.length);
+    logger.debug("posts quantity", posts.length);
     logger.info(Object.keys(posts[0].__proto__));
     var result = [];
     // if (selectedTag) {
