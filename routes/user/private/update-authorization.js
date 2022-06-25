@@ -5,7 +5,7 @@ var { UserModel } = require("../../../models/user");
 function checkRole(role) {
   const possibleRoles = process.env.ROLES.split(",");
   logger.warn("logic un-implemented");
-  return true; //TODO: pepo to implement with env
+  return true; //TODO: to implement with env or config file
 }
 
 module.exports = router.post("/", async (req, res) => {
@@ -14,6 +14,8 @@ module.exports = router.post("/", async (req, res) => {
     var newRole = req.body.role;
     if (id && newRole && typeof id === "number" && checkRole(newRole)) {
       var user = await UserModel.findOne({ where: { id } });
+      var result = await user.update({ type: req.body.role });
+      res.json({ result });
     } else {
       res.status(400).json({ message: "bad request" });
     }
