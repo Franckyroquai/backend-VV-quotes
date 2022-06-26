@@ -4,13 +4,10 @@ var { TagModel } = require("../../../models/tag");
 
 module.exports = router.get("/", async (req, res) => {
   try {
-    // logger.debug(Object.keys(TagModel));
-    // logger.debug(TagModel.associations);
-    var testTag = await TagModel.findOne({ where: { id: req.body.tagId } });
-    // logger.info(Object.keys(testTag));
-    var assocPosts = await testTag.getPosts();
+    var tag = await TagModel.findOne({ where: { id: req.body.tagId } });
+    var assocPosts = await tag.getPosts();
     logger.debug(assocPosts);
-    res.send("ok");
+    res.status(200).json({ posts: assocPosts });
   } catch (error) {
     logger.error("uncaught error", error); //FIXME: error handling
     res.status(500).json({ message: "internal server error" });

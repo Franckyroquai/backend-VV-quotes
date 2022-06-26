@@ -14,7 +14,7 @@ async function syncronize(sequelizeInstance) {
         return await sequelizeInstance.sync();
       }
     }
-    throw new Error("Bad Env Parameter for DB_SYNC_TYPE");
+    // throw new Error("Bad Env Parameter for DB_SYNC_TYPE");
   } catch (error) {
     logger.error(error);
   }

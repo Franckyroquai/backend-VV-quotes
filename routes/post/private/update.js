@@ -84,6 +84,7 @@ function sanitizeUpdatePostRequest(request) {
     Object.assign(sanitizedObject, { error });
   }
   logger.warn(sanitizedObject);
+  Object.assign(sanitizedObject, { updatedBy: request.user.id });
   return sanitizedObject;
 }
 

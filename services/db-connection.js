@@ -9,7 +9,7 @@ var sequelizeInstance = new Sequelize(
     host: process.env.DBHOST,
     port: parseInt(process.env.DBPORT, 10),
     dialect: "mysql",
-    logging: console.info,
+    logging: false,
     showWarnings: false,
     define: {
       charset: "utf8mb4",
