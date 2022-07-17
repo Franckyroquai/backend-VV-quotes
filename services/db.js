@@ -11,7 +11,6 @@ mongoose.connect(
   {}
 );
 mongoose.connection.on("error", (error) => {
-  //on ecouteur d'événement de connexion mongoose
   logger.error("mongoose connection error", error);
   process.exit;
 });
@@ -22,4 +21,4 @@ mongoose.connection.on("disconnected", (reason) => {
   logger.info("mongoose disconnected", reason);
 });
 
-mongoose.Promise = global.Promise; //prommesses mongoose mêmes promesses que le reste du systeme (async await)
+mongoose.Promise = global.Promise; //promesses mongoose mêmes promesses que le reste du systeme (async await)
