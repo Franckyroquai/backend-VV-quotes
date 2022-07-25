@@ -1,43 +1,22 @@
-var { DataTypes } = require("sequelize");
-var sequelizeInstance =
-  require("../services/db-connection").getSequelizeInstance();
-var logger = require("../helpers/logger");
+const mongoose = require("mongoose");
 
-var Author = sequelizeInstance.define(
-  "author",
+const Schema = mongoose.Schema;
+
+const AuthorSchema = new Schema(
   {
     name: {
-      type: DataTypes.STRING(500),
-      allowNull: false,
+      type: String,
       required: true,
       unique: true,
-      validate: {
-        notNull: {
-          msg: "Name of the author is required",
-        },
-        notEmpty: {
-          msg: "the name of the author can't be empty",
-        },
-      },
     },
     wikilink: {
-      type: DataTypes.STRING(500),
-      allowNull: false,
-      defaultValue: "https://en.wikipedia.org/wiki/Author",
-      validate: {
-        notEmpty: {
-          msg: "the link can't be empty",
-        },
-      },
+      type: String,
+      required: false,
     },
   },
-  {
-    timestamps: true,
-    comment: "Author of a quote",
-    underscored: true,
-  }
+  { timestamps: true }
 );
 
-module.exports = {
-  AuthorModel: Author,
-};
+const AuthorModel = mongoose.model("quote", AuthorSchema);
+
+module.exports = AuthorModel;

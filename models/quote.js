@@ -1,33 +1,39 @@
-var { DataTypes } = require("sequelize");
-var sequelizeInstance =
-  require("../services/db-connection").getSequelizeInstance();
+const mongoose = require("mongoose");
+const mRandom = require("mongoose-simple-random");
 
-var Quote = sequelizeInstance.define(
-  "quote",
+const Schema = mongoose.Schema;
+
+const QuoteSchema = new Schema(
   {
     text: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      type: String,
+      required: true,
       unique: true,
     },
-    updatedBy: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
+    author: {
+      type: String,
+      required: false,
     },
-    locutor: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    locutorLink: {
-      type: DataTypes.STRING,
-      allowNull: true,
+    userId: {
+      type: Number,
+      required: false,
     },
   },
-  {
-    timestamps: true,
-    comment: "quotes",
-    underscored: true,
-  }
+  { timestamps: true }
 );
+QuoteSchema.plugin(mRandom);
 
-module.exports = { QuoteModel: Quote };
+QuoteSchema.static.quoteCleanUp = function (quote) {
+  if (quote.text && quote.author) {
+    return {
+      text: quote.text,
+      author: quote.author,
+    };
+  } else {
+    throw new Error("quote format error");
+  }
+};
+
+const QuoteModel = mongoose.model("quote", QuoteSchema);
+
+module.exports = QuoteModel;
